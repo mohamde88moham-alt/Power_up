@@ -1,0 +1,4736 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>متتبع العادات اليومية — AI Powered</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080c14;
+    --surface: #0d1525;
+    --surface2: #111d33;
+    --border: rgba(0,200,255,0.12);
+    --accent: #00c8ff;
+    --accent2: #7c3aed;
+    --accent3: #10b981;
+    --accent4: #f59e0b;
+    --danger: #ef4444;
+    --text: #e2e8f0;
+    --text-muted: #64748b;
+    --glow: rgba(0,200,255,0.3);
+    --glow2: rgba(124,58,237,0.3);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Cairo', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+    direction: rtl;
+  }
+
+  /* Animated background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,200,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,200,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+    animation: gridMove 20s linear infinite;
+  }
+
+  @keyframes gridMove {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(40px); }
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    top: -50%;
+    left: -20%;
+    width: 60%;
+    height: 80%;
+    background: radial-gradient(ellipse, rgba(0,200,255,0.05) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+    animation: pulse 8s ease-in-out infinite alternate;
+  }
+
+  @keyframes pulse {
+    0% { opacity: 0.5; transform: scale(1); }
+    100% { opacity: 1; transform: scale(1.1); }
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  /* HEADER */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0 30px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 30px;
+    animation: slideDown 0.8s ease;
+  }
+
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .logo-icon {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    box-shadow: 0 0 20px var(--glow);
+    animation: iconPulse 3s ease-in-out infinite;
+  }
+
+  @keyframes iconPulse {
+    0%, 100% { box-shadow: 0 0 20px var(--glow); }
+    50% { box-shadow: 0 0 40px var(--glow), 0 0 60px rgba(124,58,237,0.2); }
+  }
+
+  .logo-text h1 {
+    font-family: 'Orbitron', monospace;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 1px;
+    text-shadow: 0 0 15px var(--glow);
+  }
+
+  .logo-text p {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .status-start-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border: 1px solid rgba(245,158,11,0.4);
+    border-radius: 50px;
+    background: linear-gradient(135deg, rgba(245,158,11,0.18), rgba(239,68,68,0.12));
+    color: #fbbf24;
+    font-family: 'Orbitron', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 0 18px rgba(245,158,11,0.25);
+    animation: statusStartPulse 2.4s ease-in-out infinite;
+  }
+
+  .status-start-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 26px rgba(245,158,11,0.4);
+    border-color: #fbbf24;
+  }
+
+  .status-start-icon { font-size: 15px; }
+
+  @keyframes statusStartPulse {
+    0%, 100% { box-shadow: 0 0 14px rgba(245,158,11,0.2); }
+    50% { box-shadow: 0 0 26px rgba(245,158,11,0.45); }
+  }
+
+  .ai-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: linear-gradient(135deg, rgba(124,58,237,0.2), rgba(0,200,255,0.1));
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    font-size: 12px;
+    color: var(--accent);
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ai-badge::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(0,200,255,0.1), transparent);
+    transform: translateX(-100%);
+    animation: shimmer 3s infinite;
+  }
+
+  @keyframes shimmer {
+    100% { transform: translateX(100%); }
+  }
+
+  .ai-dot {
+    width: 8px; height: 8px;
+    background: var(--accent3);
+    border-radius: 50%;
+    animation: blink 1.5s infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .btn {
+    padding: 10px 22px;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+    box-shadow: 0 4px 20px var(--glow);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px var(--glow);
+  }
+
+  /* STATS ROW */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 30px;
+    animation: fadeIn 1s ease 0.3s both;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+    cursor: default;
+  }
+
+  .stat-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3), 0 0 30px var(--glow);
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--card-color, var(--accent));
+    border-radius: 16px 16px 0 0;
+  }
+
+  .stat-icon {
+    font-size: 28px;
+    margin-bottom: 10px;
+  }
+
+  .stat-value {
+    font-family: 'Orbitron', monospace;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--card-color, var(--accent));
+    text-shadow: 0 0 20px currentColor;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .stat-label {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  .stat-trend {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    font-size: 11px;
+    color: var(--accent3);
+    background: rgba(16,185,129,0.1);
+    padding: 3px 8px;
+    border-radius: 50px;
+    border: 1px solid rgba(16,185,129,0.2);
+  }
+
+  /* MAIN LAYOUT */
+  .main-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    animation: fadeIn 1s ease 0.5s both;
+  }
+
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    transition: all 0.3s;
+  }
+
+  .panel-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .panel-title::before {
+    content: '';
+    width: 3px;
+    height: 14px;
+    background: var(--accent);
+    border-radius: 2px;
+    display: inline-block;
+    box-shadow: 0 0 8px var(--accent);
+  }
+
+  /* AI Insights */
+  .insight-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    background: rgba(0,200,255,0.03);
+    border: 1px solid rgba(0,200,255,0.08);
+    margin-bottom: 8px;
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+
+  .insight-item:hover {
+    background: rgba(0,200,255,0.08);
+    border-color: var(--accent);
+  }
+
+  .insight-emoji { font-size: 18px; flex-shrink: 0; }
+
+  .insight-text {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  .insight-text strong { color: var(--text); }
+
+  /* Mini Progress Ring */
+  .ring-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 0;
+    position: relative;
+  }
+
+  .ring-label {
+    position: absolute;
+    text-align: center;
+  }
+
+  .ring-label .ring-pct {
+    font-family: 'Orbitron', monospace;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--accent);
+    text-shadow: 0 0 15px var(--glow);
+  }
+
+  .ring-label .ring-sub {
+    font-size: 10px;
+    color: var(--text-muted);
+  }
+
+  /* ============ STATUS / RPG PANEL ============ */
+  .status-panel {
+    background: linear-gradient(180deg, rgba(0,200,255,0.04), var(--surface) 40%);
+  }
+
+  .status-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+
+  .status-level-badge {
+    flex-shrink: 0;
+    width: 64px;
+    height: 64px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: linear-gradient(135deg, rgba(0,200,255,0.12), rgba(124,58,237,0.12));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 20px var(--glow);
+  }
+
+  .status-level-num {
+    font-family: 'Orbitron', monospace;
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--accent);
+    text-shadow: 0 0 15px var(--glow);
+    line-height: 1;
+  }
+
+  .status-level-label {
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .status-identity {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .status-id-row {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    cursor: pointer;
+    border-radius: 6px;
+    padding: 2px 4px;
+    transition: background 0.2s;
+  }
+
+  .status-id-row:hover {
+    background: rgba(0,200,255,0.08);
+  }
+
+  .status-id-row:hover .status-edit-hint {
+    opacity: 1;
+  }
+
+  .status-id-label {
+    font-size: 10px;
+    color: var(--text-muted);
+    flex-shrink: 0;
+  }
+
+  .status-id-value {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .status-edit-hint {
+    font-size: 10px;
+    opacity: 0;
+    transition: opacity 0.2s;
+    margin-right: auto;
+  }
+
+  .status-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .status-bar-label {
+    font-family: 'Orbitron', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-muted);
+    width: 34px;
+    flex-shrink: 0;
+  }
+
+  .status-bar-track {
+    flex: 1;
+    height: 8px;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.06);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .status-bar-fill {
+    height: 100%;
+    border-radius: 6px;
+    transition: width 0.6s ease;
+  }
+
+  .status-bar-xp { background: linear-gradient(90deg, var(--accent), var(--accent2)); box-shadow: 0 0 8px var(--glow); }
+
+  .status-bar-value {
+    font-family: 'Orbitron', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    flex-shrink: 0;
+    min-width: 52px;
+    text-align: left;
+  }
+
+  .status-xp-wrap { margin-bottom: 10px; }
+
+  .status-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 16px 0;
+  }
+
+  .status-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .status-stat-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0,200,255,0.03);
+    border: 1px solid rgba(0,200,255,0.08);
+    border-radius: 10px;
+    padding: 8px 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .status-stat-item:hover,
+  .status-stat-item.revealed {
+    border-color: var(--accent);
+    background: rgba(0,200,255,0.08);
+  }
+
+  .status-stat-icon { font-size: 14px; }
+
+  .status-stat-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 700;
+  }
+
+  .status-stat-value {
+    font-family: 'Orbitron', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    margin-right: auto;
+  }
+
+  .status-stat-edit-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 12px;
+    opacity: 0.85;
+    padding: 2px;
+    flex-shrink: 0;
+  }
+
+  .status-stat-edit-btn:hover { opacity: 1; }
+
+  .status-points-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+
+  .status-points-num {
+    font-family: 'Orbitron', monospace;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--accent4);
+    text-shadow: 0 0 10px rgba(245,158,11,0.4);
+  }
+
+  .status-distribute {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .status-dist-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .status-dist-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    width: 56px;
+    flex-shrink: 0;
+  }
+
+  .status-dist-value {
+    font-family: 'Orbitron', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    width: 24px;
+    text-align: center;
+  }
+
+  .status-dist-btns {
+    display: flex;
+    gap: 6px;
+    margin-right: auto;
+  }
+
+  .status-dist-btn {
+    width: 24px;
+    height: 24px;
+    border-radius: 7px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,0.03);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .status-dist-btn:hover:not(:disabled) {
+    border-color: var(--accent);
+    color: var(--accent);
+    box-shadow: 0 0 10px var(--glow);
+  }
+
+  .status-dist-btn.plus:hover:not(:disabled) {
+    border-color: var(--accent4);
+    color: var(--accent4);
+    box-shadow: 0 0 10px rgba(245,158,11,0.3);
+  }
+
+  .status-dist-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  .status-skills-head {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+
+  .status-skills-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+
+  .status-skill-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 8px 10px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .status-skill-item:hover,
+  .status-skill-item.revealed {
+    border-color: var(--accent);
+    background: rgba(0,200,255,0.06);
+  }
+
+  .status-skill-name {
+    font-size: 12px;
+    color: var(--text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .status-skill-actions {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .status-skill-actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 12px;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+    padding: 2px;
+  }
+
+  .status-skill-actions button:hover { opacity: 1; }
+
+  .status-skills-empty {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-align: center;
+    padding: 10px;
+  }
+
+  .status-add-skill-btn {
+    width: 100%;
+    padding: 8px;
+    border-radius: 10px;
+    border: 1px dashed var(--border);
+    background: transparent;
+    color: var(--accent);
+    font-family: 'Cairo', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .status-add-skill-btn:hover {
+    background: rgba(0,200,255,0.08);
+    border-color: var(--accent);
+  }
+
+  /* ============ STATUS PAGE (isolated full-screen page) ============ */
+  .status-page-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    display: none;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 6vh 16px 40px;
+    overflow-y: auto;
+    background:
+      radial-gradient(ellipse 60% 40% at 50% 0%, rgba(124,58,237,0.18), transparent 65%),
+      rgba(3,6,12,0.93);
+    backdrop-filter: blur(8px);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+
+  .status-page-overlay.open { opacity: 1; }
+
+  .status-page-particles {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .status-star {
+    position: absolute;
+    background: #fff;
+    border-radius: 50%;
+    opacity: 0;
+    box-shadow: 0 0 6px #fff, 0 0 2px #00c8ff;
+    animation: statusStarTwinkle ease-in-out infinite;
+  }
+
+  @keyframes statusStarTwinkle {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 0.85; }
+  }
+
+  .status-page-scanline {
+    position: fixed;
+    left: 0; right: 0; top: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), #fff, var(--accent), transparent);
+    box-shadow: 0 0 20px var(--accent), 0 0 50px var(--accent);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 3001;
+  }
+
+  .status-page-scanline.run {
+    animation: statusScanSweep 1.2s cubic-bezier(.2,.7,.3,1);
+  }
+
+  @keyframes statusScanSweep {
+    0% { top: 0; opacity: 1; }
+    85% { opacity: 0.8; }
+    100% { top: 100%; opacity: 0; }
+  }
+
+  .status-page-card {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 960px;
+    background: linear-gradient(180deg, rgba(14,22,39,0.97), rgba(7,11,19,0.98));
+    border: 1px solid var(--border);
+    border-radius: 26px;
+    padding: 36px clamp(20px, 4vw, 52px) 44px;
+    box-shadow:
+      0 40px 100px rgba(0,0,0,0.65),
+      0 0 70px rgba(0,200,255,0.14),
+      inset 0 0 80px rgba(0,200,255,0.03);
+    transform: scale(0.9) translateY(28px);
+    opacity: 0;
+    transition: transform 0.55s cubic-bezier(.2,.85,.25,1.3), opacity 0.5s ease;
+  }
+
+  .status-page-overlay.open .status-page-card {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+
+  .status-corner {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    opacity: 0.9;
+    pointer-events: none;
+  }
+  .status-corner.tl { top: -1px; left: -1px; border-top: 2px solid var(--accent); border-left: 2px solid var(--accent); border-radius: 14px 0 0 0; }
+  .status-corner.tr { top: -1px; right: -1px; border-top: 2px solid var(--accent); border-right: 2px solid var(--accent); border-radius: 0 14px 0 0; }
+  .status-corner.bl { bottom: -1px; left: -1px; border-bottom: 2px solid var(--accent); border-left: 2px solid var(--accent); border-radius: 0 0 0 14px; }
+  .status-corner.br { bottom: -1px; right: -1px; border-bottom: 2px solid var(--accent); border-right: 2px solid var(--accent); border-radius: 0 0 14px 0; }
+
+  .status-page-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 22px;
+  }
+
+  .status-page-heading {
+    font-family: 'Orbitron', monospace;
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: 4px;
+    color: var(--accent);
+    text-shadow: 0 0 20px var(--glow);
+  }
+
+  .status-page-heading span {
+    display: block;
+    font-family: 'Cairo', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0;
+    font-weight: 400;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .status-page-back {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 18px;
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    background: rgba(255,255,255,0.03);
+    color: var(--text);
+    font-family: 'Cairo', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+
+  .status-page-back:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    box-shadow: 0 0 14px var(--glow);
+  }
+
+  .status-page-body {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 28px;
+  }
+
+  @media (max-width: 760px) {
+    .status-page-body { grid-template-columns: 1fr; }
+  }
+
+  .status-page-col {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .status-page-skills-panel {
+    background: rgba(0,200,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 18px;
+  }
+
+  /* Reveal-on-open staggered animation */
+  .status-reveal {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  .status-page-overlay.open .status-reveal {
+    animation: statusRevealIn 0.6s ease forwards;
+  }
+
+  .status-page-overlay.open .status-reveal.r1 { animation-delay: .15s; }
+  .status-page-overlay.open .status-reveal.r2 { animation-delay: .25s; }
+  .status-page-overlay.open .status-reveal.r3 { animation-delay: .35s; }
+  .status-page-overlay.open .status-reveal.r4 { animation-delay: .45s; }
+  .status-page-overlay.open .status-reveal.r5 { animation-delay: .55s; }
+
+  @keyframes statusRevealIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Enlarge inner status widgets for the dedicated page */
+  .status-page-card .status-level-badge { width: 88px; height: 88px; border-radius: 20px; }
+  .status-page-card .status-level-num { font-size: 32px; }
+  .status-page-card .status-id-value { font-size: 15px; }
+  .status-page-card .status-stats-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .status-page-card .status-stat-item { padding: 12px 14px; }
+  .status-page-card .status-stat-icon { font-size: 17px; }
+  .status-page-card .status-stat-value { font-size: 17px; }
+
+  /* HABIT TRACKER TABLE */
+  .tracker-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    animation: fadeIn 1s ease 0.4s both;
+  }
+
+  .tracker-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(135deg, rgba(0,200,255,0.05), rgba(124,58,237,0.05));
+  }
+
+  .tracker-title {
+    font-size: 16px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .week-nav {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .week-nav button {
+    width: 32px; height: 32px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--text);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .week-nav button:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    box-shadow: 0 0 10px var(--glow);
+  }
+
+  .week-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    min-width: 80px;
+    text-align: center;
+  }
+
+  /* Table */
+  .table-wrap {
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  thead th {
+    padding: 12px 8px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--border);
+    text-align: center;
+  }
+
+  thead th:first-child {
+    text-align: right;
+    padding-right: 24px;
+    min-width: 180px;
+  }
+
+  thead th.today-col {
+    color: var(--accent);
+    position: relative;
+  }
+
+  thead th.today-col::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 20px; height: 2px;
+    background: var(--accent);
+    border-radius: 2px;
+    box-shadow: 0 0 8px var(--accent);
+  }
+
+  tbody tr {
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    transition: background 0.2s;
+  }
+
+  tbody tr:hover {
+    background: rgba(0,200,255,0.03);
+  }
+
+  tbody tr:last-child { border-bottom: none; }
+
+  .habit-name {
+    padding: 14px 24px 14px 8px;
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+  }
+
+  .habit-emoji { font-size: 16px; }
+
+  .habit-streak {
+    font-size: 10px;
+    color: var(--accent4);
+    background: rgba(245,158,11,0.1);
+    padding: 2px 6px;
+    border-radius: 50px;
+    margin-right: auto;
+    white-space: nowrap;
+  }
+
+  td {
+    text-align: center;
+    padding: 10px 8px;
+    vertical-align: middle;
+  }
+
+  /* Checkbox */
+  .check-cell {
+    position: relative;
+  }
+
+  .habit-check {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    border: 2px solid rgba(255,255,255,0.1);
+    background: var(--surface2);
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    transition: all 0.2s;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .habit-check:checked {
+    background: linear-gradient(135deg, var(--accent3), #059669);
+    border-color: var(--accent3);
+    box-shadow: 0 0 12px rgba(16,185,129,0.4);
+    animation: checkPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes checkPop {
+    0% { transform: scale(0.7); }
+    100% { transform: scale(1); }
+  }
+
+  .habit-check:checked::after {
+    content: '✓';
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    position: absolute;
+  }
+
+  .habit-check:not(:checked)::after {
+    content: '';
+  }
+
+  .habit-check.future {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  .habit-check.today-check {
+    border-color: rgba(0,200,255,0.4);
+    box-shadow: 0 0 8px rgba(0,200,255,0.2);
+  }
+
+  /* Progress bar row */
+  .progress-row td {
+    padding: 16px 8px 12px;
+  }
+
+  .day-progress {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .day-bar {
+    width: 4px;
+    height: 40px;
+    background: var(--surface2);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .day-bar-fill {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: linear-gradient(to top, var(--accent3), var(--accent));
+    border-radius: 4px;
+    transition: height 0.8s cubic-bezier(0.34, 1.2, 0.64, 1);
+  }
+
+  .day-pct {
+    font-family: 'Orbitron', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+  }
+
+  /* Add Habit */
+  .add-habit-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 24px;
+    border-top: 1px solid var(--border);
+    background: rgba(0,200,255,0.02);
+  }
+
+  .add-habit-input {
+    flex: 1;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 14px;
+    color: var(--text);
+    font-family: 'Cairo', sans-serif;
+    font-size: 13px;
+    outline: none;
+    transition: all 0.3s;
+    direction: rtl;
+  }
+
+  .add-habit-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 15px rgba(0,200,255,0.15);
+  }
+
+  .add-habit-input::placeholder { color: var(--text-muted); }
+
+  /* BOTTOM: Analysis + AI Chat */
+  .bottom-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    animation: fadeIn 1s ease 0.7s both;
+  }
+
+  /* Analysis Chart */
+  .chart-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    height: 100px;
+    padding: 0 4px;
+  }
+
+  .chart-bar-wrap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    height: 100%;
+  }
+
+  .chart-bar-col {
+    flex: 1;
+    width: 100%;
+    background: var(--surface2);
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+    position: relative;
+  }
+
+  .chart-bar-inner {
+    width: 100%;
+    background: linear-gradient(to top, var(--accent), rgba(0,200,255,0.3));
+    border-radius: 4px;
+    transition: height 1s cubic-bezier(0.34, 1.2, 0.64, 1);
+    position: relative;
+  }
+
+  .chart-bar-inner::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 40%;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.2), transparent);
+    border-radius: 4px 4px 0 0;
+  }
+
+  .chart-label { font-size: 10px; color: var(--text-muted); }
+
+  /* AI CHAT */
+  .ai-chat-area {
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  .msg {
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 12px;
+    line-height: 1.6;
+    max-width: 85%;
+    animation: msgIn 0.3s ease;
+  }
+
+  @keyframes msgIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .msg.ai {
+    background: linear-gradient(135deg, rgba(0,200,255,0.1), rgba(124,58,237,0.1));
+    border: 1px solid rgba(0,200,255,0.15);
+    color: var(--text);
+    align-self: flex-start;
+    border-radius: 4px 12px 12px 12px;
+  }
+
+  .msg.user {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    align-self: flex-end;
+    border-radius: 12px 4px 12px 12px;
+  }
+
+  .msg-time {
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-top: 3px;
+  }
+
+  .ai-input-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .ai-input {
+    flex: 1;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 14px;
+    color: var(--text);
+    font-family: 'Cairo', sans-serif;
+    font-size: 13px;
+    outline: none;
+    transition: all 0.3s;
+    direction: rtl;
+  }
+
+  .ai-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 15px rgba(0,200,255,0.15);
+  }
+
+  .send-btn {
+    width: 40px; height: 40px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px var(--glow);
+    flex-shrink: 0;
+  }
+
+  .send-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px var(--glow);
+  }
+
+  .send-btn:disabled {
+    opacity: 0.5;
+    transform: none;
+    cursor: not-allowed;
+  }
+
+  /* Loading dots */
+  .loading-dots span {
+    display: inline-block;
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    margin: 0 2px;
+    animation: dot 1.4s infinite;
+  }
+  .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes dot {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.3; }
+    30% { transform: translateY(-6px); opacity: 1; }
+  }
+
+  /* Month selector */
+  .month-tabs {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+
+  .month-tab {
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-muted);
+    font-family: 'Cairo', sans-serif;
+    transition: all 0.2s;
+  }
+
+  .month-tab.active {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 0 10px var(--glow);
+  }
+
+  /* Notification toast */
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--surface);
+    border: 1px solid var(--accent);
+    border-radius: 12px;
+    padding: 14px 24px;
+    font-size: 13px;
+    color: var(--accent);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 30px var(--glow);
+    z-index: 1000;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* Drag & Drop */
+  .drag-handle {
+    width: 24px; height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    cursor: grab;
+    opacity: 0;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    font-size: 14px;
+    border-radius: 6px;
+    user-select: none;
+  }
+
+  .drag-handle:active { cursor: grabbing; }
+
+  tbody tr:hover .drag-handle {
+    opacity: 1;
+  }
+
+  .drag-handle:hover {
+    color: var(--accent);
+    background: rgba(0,200,255,0.1);
+  }
+
+  tbody tr.dragging {
+    opacity: 0.4;
+    background: rgba(0,200,255,0.05);
+  }
+
+  tbody tr.drag-over {
+    border-top: 2px solid var(--accent);
+    box-shadow: 0 -2px 12px var(--glow);
+  }
+
+  tbody tr.drag-over-bottom {
+    border-bottom: 2px solid var(--accent);
+    box-shadow: 0 2px 12px var(--glow);
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .main-layout { grid-template-columns: 1fr; }
+    .bottom-layout { grid-template-columns: 1fr; }
+    .sidebar { order: 2; }
+  }
+
+  /* Delete button */
+  .delete-habit-btn {
+    width: 26px; height: 26px;
+    border: 1px solid rgba(239,68,68,0.3);
+    background: rgba(239,68,68,0.08);
+    color: var(--danger);
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  tbody tr:hover .delete-habit-btn {
+    opacity: 1;
+  }
+
+  .delete-habit-btn:hover {
+    background: rgba(239,68,68,0.25);
+    border-color: var(--danger);
+    box-shadow: 0 0 10px rgba(239,68,68,0.3);
+    transform: scale(1.1);
+  }
+
+  /* Edit button */
+  .edit-habit-btn {
+    width: 26px; height: 26px;
+    border: 1px solid rgba(0,200,255,0.3);
+    background: rgba(0,200,255,0.08);
+    color: var(--accent);
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  tbody tr:hover .edit-habit-btn {
+    opacity: 1;
+  }
+
+  .edit-habit-btn:hover {
+    background: rgba(0,200,255,0.2);
+    border-color: var(--accent);
+    box-shadow: 0 0 10px var(--glow);
+    transform: scale(1.1);
+  }
+
+  /* Edit Modal */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(6px);
+    z-index: 3500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+
+  .modal-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid rgba(0,200,255,0.25);
+    border-radius: 20px;
+    padding: 28px;
+    width: 440px;
+    max-width: 90vw;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 40px rgba(0,200,255,0.1);
+    transform: translateY(20px) scale(0.97);
+    transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    position: relative;
+    direction: rtl;
+  }
+
+  .modal-overlay.open .modal {
+    transform: translateY(0) scale(1);
+  }
+
+  .modal-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 22px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .modal-title::before {
+    content: '';
+    width: 3px; height: 16px;
+    background: var(--accent);
+    border-radius: 2px;
+    box-shadow: 0 0 8px var(--accent);
+    display: inline-block;
+  }
+
+  .modal-field {
+    margin-bottom: 18px;
+  }
+
+  .modal-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    display: block;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .modal-input {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 11px 14px;
+    color: var(--text);
+    font-family: 'Cairo', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: all 0.3s;
+    direction: rtl;
+  }
+
+  .modal-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 15px rgba(0,200,255,0.15);
+  }
+
+  /* Emoji Picker */
+  .emoji-grid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 6px;
+    max-height: 180px;
+    overflow-y: auto;
+    padding: 4px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  .emoji-btn {
+    width: 36px; height: 36px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+
+  .emoji-btn:hover {
+    border-color: var(--accent);
+    background: rgba(0,200,255,0.1);
+    transform: scale(1.15);
+  }
+
+  .emoji-btn.selected {
+    border-color: var(--accent);
+    background: rgba(0,200,255,0.15);
+    box-shadow: 0 0 10px var(--glow);
+    transform: scale(1.1);
+  }
+
+  .emoji-preview {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  .emoji-preview-icon { font-size: 24px; }
+
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 22px;
+  }
+
+  .btn-cancel {
+    flex: 1;
+    padding: 11px;
+    border: 1px solid var(--border);
+    background: transparent;
+    border-radius: 10px;
+    color: var(--text-muted);
+    font-family: 'Cairo', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-cancel:hover {
+    border-color: var(--text-muted);
+    color: var(--text);
+    background: rgba(255,255,255,0.04);
+  }
+
+  .btn-save {
+    flex: 2;
+    padding: 11px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: white;
+    font-family: 'Cairo', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 20px var(--glow);
+  }
+
+  .btn-save:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px var(--glow);
+  }
+
+  /* Emoji search */
+  .emoji-search {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    color: var(--text);
+    font-family: 'Cairo', sans-serif;
+    font-size: 12px;
+    outline: none;
+    margin-bottom: 8px;
+    direction: rtl;
+    transition: border-color 0.2s;
+  }
+
+  .emoji-search:focus { border-color: var(--accent); }
+
+  /* ===== PROGRESS CHART SECTION ===== */
+  .progress-section {
+    margin-top: 24px;
+    animation: fadeIn 1s ease 0.9s both;
+  }
+
+  .progress-section .panel {
+    padding: 24px;
+  }
+
+  .chart-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .chart-view-tabs {
+    display: flex;
+    gap: 6px;
+    background: var(--surface2);
+    padding: 4px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+
+  .chart-view-tab {
+    padding: 6px 18px;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-family: 'Cairo', sans-serif;
+    transition: all 0.25s;
+  }
+
+  .chart-view-tab.active {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+    box-shadow: 0 2px 12px var(--glow);
+  }
+
+  .chart-view-tab:hover:not(.active) {
+    color: var(--text);
+    background: rgba(255,255,255,0.05);
+  }
+
+  /* SVG Line Chart */
+  .line-chart-wrap {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .chart-svg {
+    width: 100%;
+    height: 220px;
+    display: block;
+    overflow: visible;
+  }
+
+  .chart-grid-line {
+    stroke: rgba(255,255,255,0.04);
+    stroke-width: 1;
+  }
+
+  .chart-axis-label {
+    fill: var(--text-muted);
+    font-size: 10px;
+    font-family: 'Cairo', sans-serif;
+  }
+
+  .chart-line-path {
+    fill: none;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .chart-area-path {
+    opacity: 0.12;
+  }
+
+  .chart-dot {
+    cursor: pointer;
+    transition: r 0.15s;
+  }
+
+  .chart-dot:hover { r: 6; }
+
+  /* Chart tooltip */
+  .chart-tooltip {
+    position: absolute;
+    background: var(--surface);
+    border: 1px solid rgba(0,200,255,0.3);
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-size: 12px;
+    color: var(--text);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+    white-space: nowrap;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4), 0 0 16px rgba(0,200,255,0.1);
+    z-index: 10;
+    transform: translate(-50%, -110%);
+  }
+
+  .chart-tooltip.visible { opacity: 1; }
+
+  .tooltip-value {
+    font-family: 'Orbitron', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  /* Legend */
+  .chart-legend {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+
+  .legend-item:hover { color: var(--text); }
+
+  .legend-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* Summary cards inside chart */
+  .chart-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .chart-sum-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 16px;
+    text-align: center;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .chart-sum-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--sum-color, var(--accent));
+    border-radius: 2px 2px 0 0;
+  }
+
+  .chart-sum-card:hover {
+    border-color: rgba(0,200,255,0.3);
+    transform: translateY(-2px);
+  }
+
+  .sum-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+
+  .sum-value {
+    font-family: 'Orbitron', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--sum-color, var(--accent));
+    text-shadow: 0 0 12px currentColor;
+  }
+
+  .sum-sub {
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  /* Y axis labels */
+  .y-labels {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    pointer-events: none;
+    padding: 8px 0;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(0,200,255,0.3); }
+
+  /* ===== OVERALL STATS + ANALYSIS SECTION ===== */
+  .overview-section {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr 1fr;
+    gap: 20px;
+    margin-top: 24px;
+    animation: fadeIn 1s ease 1.1s both;
+  }
+
+  /* Overall Stats donut */
+  .overall-stats-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .overall-stats-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 16px 16px 0 0;
+  }
+
+  .overall-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.5px;
+    align-self: flex-start;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .overall-title::before {
+    content: '';
+    width: 3px; height: 14px;
+    background: var(--accent);
+    border-radius: 2px;
+    box-shadow: 0 0 8px var(--accent);
+    display: inline-block;
+  }
+
+  .donut-wrap {
+    position: relative;
+    width: 130px; height: 130px;
+  }
+
+  .donut-wrap svg { width: 100%; height: 100%; }
+
+  .donut-center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .donut-pct {
+    font-family: 'Orbitron', monospace;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--accent);
+    text-shadow: 0 0 15px var(--glow);
+    line-height: 1;
+  }
+
+  .donut-sub {
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .overall-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .meta-item {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    text-align: center;
+  }
+
+  .meta-val {
+    font-family: 'Orbitron', monospace;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1;
+  }
+
+  .meta-lbl {
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-top: 3px;
+  }
+
+  /* Analysis Table */
+  .analysis-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .analysis-head {
+    padding: 16px 20px;
+    background: linear-gradient(135deg, rgba(0,200,255,0.07), rgba(124,58,237,0.07));
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .analysis-head::before {
+    content: '';
+    width: 3px; height: 14px;
+    background: var(--accent);
+    border-radius: 2px;
+    box-shadow: 0 0 8px var(--accent);
+    display: inline-block;
+  }
+
+  .analysis-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .analysis-table thead th {
+    padding: 9px 14px;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--border);
+    text-align: center;
+    background: rgba(0,0,0,0.2);
+  }
+
+  .analysis-table thead th:first-child { text-align: center; }
+
+  .analysis-table tbody tr {
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    transition: background 0.2s;
+  }
+
+  .analysis-table tbody tr:hover { background: rgba(0,200,255,0.04); }
+  .analysis-table tbody tr:last-child { border-bottom: none; }
+
+  .analysis-table td {
+    padding: 8px 14px;
+    font-size: 12px;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  .an-goal {
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .an-actual {
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    color: var(--accent3);
+    font-weight: 700;
+  }
+
+  .an-left {
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    color: var(--accent4);
+  }
+
+  .an-bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .an-bar {
+    flex: 1;
+    height: 6px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .an-bar-fill {
+    height: 100%;
+    border-radius: 6px;
+    transition: width 1s cubic-bezier(0.34,1.2,0.64,1);
+  }
+
+  .an-pct {
+    font-family: 'Orbitron', monospace;
+    font-size: 10px;
+    min-width: 32px;
+    text-align: right;
+    font-weight: 700;
+  }
+
+  /* Top Habits Card */
+  .top-habits-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .top-habits-head {
+    padding: 16px 20px;
+    background: linear-gradient(135deg, rgba(124,58,237,0.08), rgba(0,200,255,0.05));
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .top-habits-head::before {
+    content: '';
+    width: 3px; height: 14px;
+    background: var(--accent2);
+    border-radius: 2px;
+    box-shadow: 0 0 8px var(--accent2);
+    display: inline-block;
+  }
+
+  .top-habits-list {
+    padding: 10px 0;
+  }
+
+  .top-habit-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 18px;
+    transition: background 0.2s;
+    cursor: default;
+  }
+
+  .top-habit-item:hover { background: rgba(124,58,237,0.06); }
+
+  .top-habit-rank {
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-muted);
+    min-width: 18px;
+    text-align: center;
+  }
+
+  .top-habit-rank.gold { color: #f59e0b; text-shadow: 0 0 8px rgba(245,158,11,0.5); }
+  .top-habit-rank.silver { color: #94a3b8; }
+  .top-habit-rank.bronze { color: #cd7c54; }
+
+  .top-habit-emoji { font-size: 15px; }
+
+  .top-habit-name {
+    flex: 1;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .top-habit-streak {
+    font-family: 'Orbitron', monospace;
+    font-size: 10px;
+    color: var(--accent4);
+    background: rgba(245,158,11,0.1);
+    border: 1px solid rgba(245,158,11,0.2);
+    padding: 2px 7px;
+    border-radius: 50px;
+    white-space: nowrap;
+  }
+
+  .top-habit-pct {
+    font-family: 'Orbitron', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    min-width: 34px;
+    text-align: left;
+  }
+
+  @media (max-width: 1100px) {
+    .overview-section { grid-template-columns: 1fr 1fr; }
+    .top-habits-card { grid-column: span 2; }
+  }
+
+  @media (max-width: 700px) {
+    .overview-section { grid-template-columns: 1fr; }
+    .top-habits-card { grid-column: span 1; }
+  }
+
+  /* ===== SUB-TASKS SECTION ===== */
+  .subtasks-section {
+    margin-top: 28px;
+    animation: fadeIn 1s ease 1s both;
+  }
+
+  .subtasks-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 800px) {
+    .subtasks-grid { grid-template-columns: 1fr; }
+  }
+
+  .subtask-board {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: box-shadow 0.3s;
+  }
+
+  .subtask-board:hover {
+    box-shadow: 0 8px 40px rgba(0,0,0,0.3);
+  }
+
+  .subtask-board-header {
+    padding: 18px 22px 14px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .subtask-board-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .subtask-board-title .board-icon {
+    width: 32px; height: 32px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+
+  .board-1 .board-icon { background: linear-gradient(135deg, rgba(0,200,255,0.2), rgba(0,200,255,0.05)); border: 1px solid rgba(0,200,255,0.25); }
+  .board-2 .board-icon { background: linear-gradient(135deg, rgba(124,58,237,0.2), rgba(124,58,237,0.05)); border: 1px solid rgba(124,58,237,0.25); }
+
+  .board-1 .subtask-board-header { background: linear-gradient(135deg, rgba(0,200,255,0.04), transparent); }
+  .board-2 .subtask-board-header { background: linear-gradient(135deg, rgba(124,58,237,0.04), transparent); }
+
+  .board-1 .subtask-board-title { color: var(--accent); }
+  .board-2 .subtask-board-title { color: var(--accent2); }
+  .board-2 .subtask-board-title::before { background: var(--accent2) !important; box-shadow: 0 0 8px var(--accent2) !important; }
+
+  .subtask-board-title::before {
+    content: '';
+    width: 3px; height: 14px;
+    background: var(--accent);
+    border-radius: 2px;
+    box-shadow: 0 0 8px var(--accent);
+    display: inline-block;
+  }
+
+  .subtask-count-badge {
+    font-family: 'Orbitron', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 50px;
+    border: 1px solid;
+  }
+
+  .board-1 .subtask-count-badge { color: var(--accent); border-color: rgba(0,200,255,0.25); background: rgba(0,200,255,0.08); }
+  .board-2 .subtask-count-badge { color: var(--accent2); border-color: rgba(124,58,237,0.25); background: rgba(124,58,237,0.08); }
+
+  .subtask-progress-bar {
+    height: 3px;
+    background: rgba(255,255,255,0.05);
+    margin: 0 22px 0;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .subtask-progress-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.6s cubic-bezier(0.34,1.2,0.64,1);
+  }
+
+  .board-1 .subtask-progress-fill { background: linear-gradient(90deg, var(--accent), #00e5ff); box-shadow: 0 0 8px var(--glow); }
+  .board-2 .subtask-progress-fill { background: linear-gradient(90deg, var(--accent2), #a855f7); box-shadow: 0 0 8px var(--glow2); }
+
+  .subtask-stats-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 22px 14px;
+    font-size: 11px;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .subtask-stat-pill {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 50px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .pill-done { background: rgba(16,185,129,0.1); color: var(--accent3); border: 1px solid rgba(16,185,129,0.2); }
+  .pill-pending { background: rgba(245,158,11,0.08); color: var(--accent4); border: 1px solid rgba(245,158,11,0.15); }
+  .pill-pct { margin-right: auto; font-family: 'Orbitron', monospace; font-size: 11px; font-weight: 700; }
+
+  .board-1 .pill-pct { color: var(--accent); }
+  .board-2 .pill-pct { color: var(--accent2); }
+
+  .subtask-list {
+    padding: 10px 0;
+    max-height: 320px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  .subtask-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 22px;
+    transition: background 0.2s;
+    cursor: default;
+    position: relative;
+  }
+
+  .subtask-item:hover { background: rgba(255,255,255,0.02); }
+
+  .subtask-item:hover .subtask-delete-btn { opacity: 1; }
+
+  .subtask-checkbox-wrap {
+    flex-shrink: 0;
+    position: relative;
+    width: 20px; height: 20px;
+  }
+
+  .subtask-checkbox {
+    width: 20px; height: 20px;
+    border-radius: 6px;
+    border: 2px solid rgba(255,255,255,0.12);
+    background: var(--surface2);
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    transition: all 0.2s;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .board-1 .subtask-checkbox:checked {
+    background: linear-gradient(135deg, var(--accent), #0080a0);
+    border-color: var(--accent);
+    box-shadow: 0 0 10px rgba(0,200,255,0.35);
+    animation: checkPop 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  }
+
+  .board-2 .subtask-checkbox:checked {
+    background: linear-gradient(135deg, var(--accent2), #5b21b6);
+    border-color: var(--accent2);
+    box-shadow: 0 0 10px rgba(124,58,237,0.35);
+    animation: checkPop 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  }
+
+  .subtask-checkbox:checked::after {
+    content: '✓';
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    position: absolute;
+  }
+
+  .subtask-text {
+    flex: 1;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    transition: all 0.3s;
+    line-height: 1.4;
+  }
+
+  .subtask-text.done {
+    text-decoration: line-through;
+    color: var(--text-muted);
+    opacity: 0.6;
+  }
+
+  .subtask-priority {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 50px;
+    font-weight: 700;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .priority-high { background: rgba(239,68,68,0.12); color: #ef4444; border: 1px solid rgba(239,68,68,0.2); }
+  .priority-med  { background: rgba(245,158,11,0.1);  color: var(--accent4); border: 1px solid rgba(245,158,11,0.2); }
+  .priority-low  { background: rgba(16,185,129,0.1);  color: var(--accent3); border: 1px solid rgba(16,185,129,0.2); }
+
+  .subtask-delete-btn {
+    width: 22px; height: 22px;
+    border: 1px solid rgba(239,68,68,0.25);
+    background: rgba(239,68,68,0.06);
+    color: var(--danger);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 11px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+
+  .subtask-delete-btn:hover {
+    background: rgba(239,68,68,0.2);
+    border-color: var(--danger);
+    box-shadow: 0 0 8px rgba(239,68,68,0.25);
+    transform: scale(1.1);
+  }
+
+  .subtask-add-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 22px 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .subtask-input {
+    flex: 1;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 9px 13px;
+    color: var(--text);
+    font-family: 'Cairo', sans-serif;
+    font-size: 12px;
+    outline: none;
+    transition: all 0.3s;
+    direction: rtl;
+  }
+
+  .board-1 .subtask-input:focus { border-color: var(--accent); box-shadow: 0 0 12px rgba(0,200,255,0.12); }
+  .board-2 .subtask-input:focus { border-color: var(--accent2); box-shadow: 0 0 12px rgba(124,58,237,0.12); }
+
+  .subtask-input::placeholder { color: var(--text-muted); }
+
+  .subtask-priority-select {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 9px 10px;
+    color: var(--text-muted);
+    font-family: 'Cairo', sans-serif;
+    font-size: 12px;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    direction: rtl;
+  }
+
+  .board-1 .subtask-priority-select:focus { border-color: var(--accent); }
+  .board-2 .subtask-priority-select:focus { border-color: var(--accent2); }
+
+  .subtask-add-btn {
+    width: 34px; height: 34px;
+    border: none;
+    border-radius: 9px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    transition: all 0.3s;
+    flex-shrink: 0;
+    color: white;
+  }
+
+  .board-1 .subtask-add-btn {
+    background: linear-gradient(135deg, var(--accent), #0080a0);
+    box-shadow: 0 4px 14px rgba(0,200,255,0.3);
+  }
+
+  .board-2 .subtask-add-btn {
+    background: linear-gradient(135deg, var(--accent2), #5b21b6);
+    box-shadow: 0 4px 14px rgba(124,58,237,0.3);
+  }
+
+  .subtask-add-btn:hover {
+    transform: translateY(-2px) scale(1.05);
+  }
+
+  .subtask-empty {
+    padding: 30px 22px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 12px;
+  }
+
+  .subtask-empty .empty-icon {
+    font-size: 28px;
+    margin-bottom: 8px;
+    opacity: 0.5;
+  }
+
+  .subtask-item-enter {
+    animation: subtaskIn 0.3s cubic-bezier(0.34,1.4,0.64,1);
+  }
+
+  @keyframes subtaskIn {
+    from { opacity: 0; transform: translateX(16px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo">
+      <div class="logo-icon">⚡</div>
+      <div class="logo-text">
+        <h1>HABIT FORGE</h1>
+        <p>متتبع العادات الذكي</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="status-start-btn" onclick="openStatusPage()" title="افتح شاشة الحالة">
+        <span class="status-start-icon">⚔️</span>
+        <span>START</span>
+      </button>
+      <div class="ai-badge" id="month-badge" onclick="showManualReset()" title="إعادة تعيين الشهر" style="cursor:pointer;">
+        <span>📅</span>
+        <span id="current-month-label">الشهر الحالي</span>
+      </div>
+      <div class="ai-badge">
+        <div class="ai-dot"></div>
+        <span>AI مفعّل</span>
+      </div>
+      <button class="btn btn-primary" onclick="addHabitPrompt()">+ إضافة عادة</button>
+    </div>
+  </header>
+
+  <!-- STATS -->
+  <div class="stats-grid">
+    <div class="stat-card" style="--card-color: #00c8ff;">
+      <div class="stat-trend" id="stat-trend-1">↑ 12%</div>
+      <div class="stat-icon">🎯</div>
+      <div class="stat-value" id="total-done">0</div>
+      <div class="stat-label">إجمالي الإنجازات اليوم</div>
+    </div>
+    <div class="stat-card" style="--card-color: #10b981;">
+      <div class="stat-trend" id="stat-trend-2">↑ 5%</div>
+      <div class="stat-icon">🔥</div>
+      <div class="stat-value" id="best-streak">0</div>
+      <div class="stat-label">أطول سلسلة انجاز</div>
+    </div>
+    <div class="stat-card" style="--card-color: #f59e0b;">
+      <div class="stat-icon">📅</div>
+      <div class="stat-value" id="week-pct">0%</div>
+      <div class="stat-label">نسبة الأسبوع الحالي</div>
+    </div>
+    <div class="stat-card" style="--card-color: #7c3aed;">
+      <div class="stat-icon">✨</div>
+      <div class="stat-value" id="month-pct">0%</div>
+      <div class="stat-label">نسبة الشهر</div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main-layout">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+
+      <!-- Ring Progress -->
+      <div class="panel">
+        <div class="panel-title">تقدم اليوم</div>
+        <div class="ring-container">
+          <svg width="120" height="120" viewBox="0 0 120 120">
+            <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="10"/>
+            <circle cx="60" cy="60" r="50" fill="none" stroke="url(#ringGrad)" stroke-width="10"
+              stroke-linecap="round"
+              stroke-dasharray="314"
+              stroke-dashoffset="314"
+              transform="rotate(-90 60 60)"
+              id="progress-ring"
+              style="transition: stroke-dashoffset 1s ease;"/>
+            <defs>
+              <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#00c8ff"/>
+                <stop offset="100%" stop-color="#7c3aed"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <div class="ring-label">
+            <div class="ring-pct" id="ring-pct">0%</div>
+            <div class="ring-sub">اليوم</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI Insights -->
+      <div class="panel">
+        <div class="panel-title">تحليل الذكاء الاصطناعي</div>
+        <div id="ai-insights">
+          <div class="insight-item">
+            <div class="insight-emoji">🧠</div>
+            <div class="insight-text">اضغط على <strong>"تحليل AI"</strong> لتحليل عاداتك وتقديم توصيات مخصصة.</div>
+          </div>
+        </div>
+        <button class="btn btn-primary" style="width:100%; margin-top:10px; font-size:13px;" onclick="getAIInsights()">
+          🤖 تحليل AI
+        </button>
+      </div>
+
+    </div>
+
+    <!-- TRACKER TABLE -->
+    <div class="tracker-panel">
+      <div class="tracker-header">
+        <div class="tracker-title">
+          📋 متتبع العادات الأسبوعي
+        </div>
+        <div class="week-nav">
+          <button onclick="changeWeek(-1)">◀</button>
+          <div class="week-label" id="week-label">الأسبوع 1</div>
+          <button onclick="changeWeek(1)">▶</button>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead id="table-head"></thead>
+          <tbody id="table-body"></tbody>
+        </table>
+      </div>
+
+      <!-- Add habit -->
+      <div class="add-habit-row">
+        <input type="text" class="add-habit-input" id="new-habit-input" placeholder="✏️ اكتب عادة جديدة واضغط Enter..." onkeydown="handleAddHabit(event)">
+        <button class="btn btn-primary" style="padding:10px 16px; font-size:13px;" onclick="addHabitFromInput()">إضافة</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM -->
+  <div class="bottom-layout">
+
+    <!-- Chart -->
+    <div class="panel">
+      <div class="panel-title">تحليل الأداء الأسبوعي</div>
+      <div class="month-tabs" id="week-tabs"></div>
+      <div class="chart-bars" id="chart-bars"></div>
+    </div>
+
+    <!-- AI Chat -->
+    <div class="panel" style="display:flex; flex-direction:column;">
+      <div class="panel-title">🤖 مساعد الذكاء الاصطناعي</div>
+      <div class="ai-chat-area" id="ai-chat"></div>
+      <div class="ai-input-row">
+        <input type="text" class="ai-input" id="ai-input-field" placeholder="اسأل الذكاء الاصطناعي عن عاداتك..." onkeydown="if(event.key==='Enter') sendAIMessage()">
+        <button class="send-btn" id="send-btn" onclick="sendAIMessage()">➤</button>
+      </div>
+    </div>
+
+  </div>
+  
+  <!-- PROGRESS CHARTS SECTION -->
+  <div class="progress-section">
+    <div class="panel">
+      <div class="chart-header">
+        <div class="panel-title" style="margin-bottom:0;">📊 مبيان التقدم التفصيلي</div>
+        <div class="chart-view-tabs">
+          <button class="chart-view-tab active" onclick="switchChartView('week', this)">الأسبوع</button>
+          <button class="chart-view-tab" onclick="switchChartView('month', this)">الشهر</button>
+          <button class="chart-view-tab" onclick="switchChartView('year', this)">السنة</button>
+        </div>
+      </div>
+      <div class="chart-summary" id="chart-summary-cards"></div>
+      <div class="line-chart-wrap">
+        <svg class="chart-svg" id="progress-svg" viewBox="0 0 900 220" preserveAspectRatio="none"></svg>
+        <div class="chart-tooltip" id="chart-tooltip">
+          <div id="tt-label" style="font-size:11px;color:var(--text-muted);margin-bottom:2px;"></div>
+          <div id="tt-value" class="tooltip-value"></div>
+        </div>
+      </div>
+      <div class="chart-legend" id="chart-legend"></div>
+    </div>
+  </div>
+
+  <!-- OVERVIEW: Overall Stats + Analysis Table + Top Habits -->
+  <div class="overview-section">
+
+    <!-- Overall Stats Donut -->
+    <div class="overall-stats-card">
+      <div class="overall-title">Overall Stats</div>
+      <div class="donut-wrap">
+        <svg viewBox="0 0 130 130">
+          <circle cx="65" cy="65" r="52" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="12"/>
+          <!-- Completed arc -->
+          <circle cx="65" cy="65" r="52" fill="none" stroke="url(#donutGrad1)" stroke-width="12"
+            stroke-linecap="round"
+            stroke-dasharray="326.73"
+            stroke-dashoffset="326.73"
+            transform="rotate(-90 65 65)"
+            id="overall-donut-done"
+            style="transition: stroke-dashoffset 1.2s ease;"/>
+          <!-- Remaining arc -->
+          <circle cx="65" cy="65" r="52" fill="none" stroke="rgba(124,58,237,0.25)" stroke-width="12"
+            stroke-linecap="round"
+            stroke-dasharray="326.73"
+            stroke-dashoffset="326.73"
+            transform="rotate(-90 65 65)"
+            id="overall-donut-left"
+            style="transition: stroke-dashoffset 1.2s ease;"/>
+          <defs>
+            <linearGradient id="donutGrad1" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#00c8ff"/>
+              <stop offset="100%" stop-color="#10b981"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <div class="donut-center">
+          <div class="donut-pct" id="overall-pct">0%</div>
+          <div class="donut-sub">إجمالي</div>
+        </div>
+      </div>
+      <div class="overall-meta">
+        <div class="meta-item">
+          <div class="meta-val" id="ov-goal">0</div>
+          <div class="meta-lbl">الهدف</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-val" style="color:var(--accent3);" id="ov-done">0</div>
+          <div class="meta-lbl">مكتمل</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-val" style="color:var(--accent4);" id="ov-left">0</div>
+          <div class="meta-lbl">متبقي</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-val" style="color:var(--accent2);" id="ov-streak">0</div>
+          <div class="meta-lbl">أيام</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Analysis Table -->
+    <div class="analysis-card">
+      <div class="analysis-head">📋 تحليل أداء العادات (الشهر الحالي)</div>
+      <div style="overflow-x:auto; max-height:320px; overflow-y:auto;">
+        <table class="analysis-table">
+          <thead>
+            <tr>
+              <th>العادة</th>
+              <th>الهدف</th>
+              <th>المنجز</th>
+              <th>المتبقي</th>
+              <th colspan="2">التقدم</th>
+            </tr>
+          </thead>
+          <tbody id="analysis-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Top 10 Habits -->
+    <div class="top-habits-card">
+      <div class="top-habits-head">🏆 TOP DAILY HABITS</div>
+      <div class="top-habits-list" id="top-habits-list"></div>
+    </div>
+
+  </div>
+
+  <!-- SUB-TASKS SECTION -->
+  <div class="subtasks-section">
+    <div class="panel-title" style="margin-bottom:16px;">📌 المهام الثانوية اليومية</div>
+    <div class="subtasks-grid">
+
+      <!-- Board 1: اليوم -->
+      <div class="subtask-board board-1" id="subtask-board-1">
+        <div class="subtask-board-header">
+          <div class="subtask-board-title">
+            <div class="board-icon">⚡</div>
+            مهام اليوم
+          </div>
+          <span class="subtask-count-badge" id="st-badge-1">0 / 0</span>
+        </div>
+        <div class="subtask-progress-bar"><div class="subtask-progress-fill" id="st-prog-1" style="width:0%"></div></div>
+        <div class="subtask-stats-row">
+          <span class="subtask-stat-pill pill-done">✓ <span id="st-done-1">0</span> مكتمل</span>
+          <span class="subtask-stat-pill pill-pending">⏳ <span id="st-pending-1">0</span> متبقي</span>
+          <span class="pill-pct" id="st-pct-1">0%</span>
+        </div>
+        <div class="subtask-list" id="subtask-list-1"></div>
+        <div class="subtask-add-row">
+          <input type="text" class="subtask-input" id="st-input-1" placeholder="✏️ أضف مهمة جديدة..." onkeydown="if(event.key==='Enter') addSubtask(1)">
+          <select class="subtask-priority-select" id="st-priority-1">
+            <option value="high">🔴 عاجل</option>
+            <option value="med" selected>🟡 متوسط</option>
+            <option value="low">🟢 منخفض</option>
+          </select>
+          <button class="subtask-add-btn" onclick="addSubtask(1)">+</button>
+        </div>
+      </div>
+
+      <!-- Board 2: هذا الأسبوع -->
+      <div class="subtask-board board-2" id="subtask-board-2">
+        <div class="subtask-board-header">
+          <div class="subtask-board-title">
+            <div class="board-icon">🗓</div>
+            مهام الأسبوع
+          </div>
+          <span class="subtask-count-badge" id="st-badge-2">0 / 0</span>
+        </div>
+        <div class="subtask-progress-bar"><div class="subtask-progress-fill" id="st-prog-2" style="width:0%"></div></div>
+        <div class="subtask-stats-row">
+          <span class="subtask-stat-pill pill-done">✓ <span id="st-done-2">0</span> مكتمل</span>
+          <span class="subtask-stat-pill pill-pending">⏳ <span id="st-pending-2">0</span> متبقي</span>
+          <span class="pill-pct" id="st-pct-2">0%</span>
+        </div>
+        <div class="subtask-list" id="subtask-list-2"></div>
+        <div class="subtask-add-row">
+          <input type="text" class="subtask-input" id="st-input-2" placeholder="✏️ أضف مهمة جديدة..." onkeydown="if(event.key==='Enter') addSubtask(2)">
+          <select class="subtask-priority-select" id="st-priority-2">
+            <option value="high">🔴 عاجل</option>
+            <option value="med" selected>🟡 متوسط</option>
+            <option value="low">🟢 منخفض</option>
+          </select>
+          <button class="subtask-add-btn" onclick="addSubtask(2)">+</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+<div class="modal-overlay" id="edit-modal-overlay" onclick="closeEditModal(event)">
+  <div class="modal">
+    <div class="modal-title">✏️ تعديل العادة</div>
+
+    <div class="modal-field">
+      <label class="modal-label">اسم العادة</label>
+      <input type="text" class="modal-input" id="edit-habit-name" placeholder="أدخل اسم العادة...">
+    </div>
+
+    <div class="modal-field">
+      <label class="modal-label">الإيموجي المختار</label>
+      <div class="emoji-preview">
+        <span class="emoji-preview-icon" id="edit-emoji-preview">⭐</span>
+        <span>الإيموجي الحالي — اختر من القائمة أدناه</span>
+      </div>
+      <input type="text" class="emoji-search" id="emoji-search-input" placeholder="🔍 ابحث عن إيموجي..." oninput="filterEmojis(this.value)">
+      <div class="emoji-grid" id="emoji-grid"></div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeEditModal()">إلغاء</button>
+      <button class="btn-save" onclick="saveHabitEdit()">💾 حفظ التعديلات</button>
+    </div>
+  </div>
+</div>
+
+<!-- Quick Edit Modal (Status panel: job / title / skill / stat) -->
+<div class="modal-overlay" id="quick-edit-overlay" onclick="closeQuickEdit(event)">
+  <div class="modal" style="max-width:380px;">
+    <div class="modal-title" id="quick-edit-title">تعديل</div>
+
+    <div class="modal-field" id="quick-edit-field1-wrap">
+      <label class="modal-label" id="quick-edit-label1">الاسم</label>
+      <input type="text" class="modal-input" id="quick-edit-input1" placeholder="">
+    </div>
+
+    <div class="modal-field" id="quick-edit-field2-wrap" style="display:none;">
+      <label class="modal-label" id="quick-edit-label2">الأيقونة</label>
+      <input type="text" class="modal-input" id="quick-edit-input2" placeholder="">
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeQuickEdit()">إلغاء</button>
+      <button class="btn-save" onclick="saveQuickEdit()">💾 حفظ</button>
+    </div>
+  </div>
+</div>
+
+<!-- Generic Confirm Modal (e.g. delete skill) -->
+<div class="modal-overlay" id="confirm-overlay" onclick="closeConfirmModal(event)">
+  <div class="modal" style="max-width:360px;text-align:center;">
+    <div style="font-size:40px;margin-bottom:10px;">🗑</div>
+    <div class="modal-title" style="justify-content:center;" id="confirm-message">هل أنت متأكد؟</div>
+    <div class="modal-actions" style="justify-content:center;">
+      <button class="btn-cancel" onclick="closeConfirmModal()">إلغاء</button>
+      <button class="btn-save" style="background:linear-gradient(135deg,#ef4444,#f59e0b);" onclick="confirmModalYes()">🗑 تأكيد الحذف</button>
+    </div>
+  </div>
+</div>
+
+<!-- Monthly Reset Modal -->
+<div class="modal-overlay" id="monthly-reset-overlay" style="display:none;">
+  <div class="modal" style="max-width:480px;text-align:center;">
+    <div style="font-size:56px;margin-bottom:16px;animation:iconPulse 2s ease-in-out infinite;">🌙</div>
+    <div class="modal-title" style="font-size:20px;justify-content:center;margin-bottom:8px;" id="reset-month-title">بداية شهر جديد!</div>
+    <p style="font-size:13px;color:var(--text-muted);line-height:1.8;margin-bottom:20px;" id="reset-month-desc">
+      انتهى الشهر الماضي — حان وقت بداية جديدة ✨<br>
+      سيتم إعادة تعيين إحصائيات الشهر، والعادات تبقى كما هي.
+    </p>
+
+    <!-- Stats summary of last month -->
+    <div id="reset-summary" style="background:rgba(0,200,255,0.05);border:1px solid rgba(0,200,255,0.15);border-radius:14px;padding:16px;margin-bottom:20px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+      <div>
+        <div style="font-family:'Orbitron',monospace;font-size:22px;font-weight:700;color:var(--accent3);" id="reset-stat-done">0</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">إجمالي المنجز</div>
+      </div>
+      <div>
+        <div style="font-family:'Orbitron',monospace;font-size:22px;font-weight:700;color:var(--accent);" id="reset-stat-pct">0%</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">نسبة الإنجاز</div>
+      </div>
+      <div>
+        <div style="font-family:'Orbitron',monospace;font-size:22px;font-weight:700;color:var(--accent4);" id="reset-stat-streak">0</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">أعلى سلسلة 🔥</div>
+      </div>
+    </div>
+
+    <div style="font-size:12px;color:var(--text-muted);margin-bottom:20px;">
+      💾 سيتم حفظ إحصائيات الشهر الماضي تلقائياً
+    </div>
+
+    <div class="modal-actions" style="justify-content:center;gap:12px;">
+      <button class="btn-cancel" onclick="closeResetModal()" style="min-width:120px;">لاحقاً</button>
+      <button class="btn-save" onclick="confirmMonthlyReset()" style="min-width:160px;background:linear-gradient(135deg,var(--accent3),#059669);">🚀 ابدأ الشهر الجديد</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">✅ تم الحفظ</div>
+
+<!-- ============ STATUS PAGE (isolated full-screen page) ============ -->
+<div class="status-page-overlay" id="status-page-overlay" onclick="closeStatusPage(event)">
+  <div class="status-page-particles" id="status-page-particles"></div>
+  <div class="status-page-scanline" id="status-page-scanline"></div>
+
+  <div class="status-page-card" onclick="event.stopPropagation()">
+    <span class="status-corner tl"></span>
+    <span class="status-corner tr"></span>
+    <span class="status-corner bl"></span>
+    <span class="status-corner br"></span>
+
+    <div class="status-page-topbar status-reveal r1">
+      <button class="status-page-back" onclick="closeStatusPage()">→ رجوع</button>
+      <div class="status-page-heading">STATUS<span>شاشة حالة الشخصية</span></div>
+    </div>
+
+    <div class="status-page-body">
+      <!-- LEFT: identity + xp + stats + distribute -->
+      <div class="status-page-col">
+        <div class="status-head status-reveal r2">
+          <div class="status-level-badge">
+            <div class="status-level-num" id="status-level">1</div>
+            <div class="status-level-label">LEVEL</div>
+          </div>
+          <div class="status-identity">
+            <div class="status-id-row" onclick="editJob()" title="اضغط للتعديل">
+              <span class="status-id-label">Job:</span>
+              <span class="status-id-value" id="status-job">None</span>
+              <span class="status-edit-hint">✏️</span>
+            </div>
+            <div class="status-id-row" onclick="editTitle()" title="اضغط للتعديل">
+              <span class="status-id-label">Title:</span>
+              <span class="status-id-value" id="status-title">مبتدئ</span>
+              <span class="status-edit-hint">✏️</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="status-xp-wrap status-reveal r2">
+          <div class="status-bar-row">
+            <span class="status-bar-label">XP</span>
+            <div class="status-bar-track">
+              <div class="status-bar-fill status-bar-xp" id="status-xp-fill" style="width:0%;"></div>
+            </div>
+            <span class="status-bar-value" id="status-xp-text">0/100</span>
+          </div>
+        </div>
+
+        <div class="status-divider status-reveal r3"></div>
+
+        <div class="status-stats-grid status-reveal r3" id="status-stats-grid"></div>
+
+        <div class="status-points-bar status-reveal r4">
+          <span>نقاط متاحة للتوزيع</span>
+          <span class="status-points-num" id="status-points">0</span>
+        </div>
+
+        <div class="status-distribute status-reveal r4" id="status-distribute"></div>
+      </div>
+
+      <!-- RIGHT: skills -->
+      <div class="status-page-col">
+        <div class="status-page-skills-panel status-reveal r5">
+          <div class="status-skills-head">🎯 المهارات</div>
+          <div class="status-skills-list" id="status-skills-list"></div>
+          <button class="status-add-skill-btn" onclick="addSkill()">+ إضافة مهارة</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============ STATE ============
+const DAYS_AR = ['السبت','الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة'];
+const DAYS_EN = ['Sa','Su','Mo','Tu','We','Th','Fr'];
+const MONTHS_AR = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+
+let habits = JSON.parse(localStorage.getItem('habits') || 'null') || [
+  { id:1, name:'الاستيقاظ 5:00 صباحاً', emoji:'⏰', streak:0, color:'#f59e0b' },
+  { id:2, name:'التمرين الرياضي', emoji:'💪', streak:0, color:'#10b981' },
+  { id:3, name:'التأمل والتنفس', emoji:'🧘', streak:0, color:'#7c3aed' },
+  { id:4, name:'تخطيط اليوم', emoji:'📝', streak:0, color:'#00c8ff' },
+  { id:5, name:'لا سكر', emoji:'🚫', streak:0, color:'#ef4444' },
+  { id:6, name:'النوم 10:00 مساءً', emoji:'😴', streak:0, color:'#6366f1' },
+];
+
+let checks = JSON.parse(localStorage.getItem('checks') || '{}');
+let currentWeek = 0; // 0 = current week
+const today = new Date();
+let nextId = Math.max(...habits.map(h=>h.id), 0) + 1;
+
+// Chat history
+let chatHistory = [];
+
+// ============ MONTHLY RESET ============
+function getMonthKey(date) {
+  return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}`;
+}
+
+function checkMonthlyReset() {
+  const currentMonthKey = getMonthKey(today);
+  const lastActiveMonth = localStorage.getItem('lastActiveMonth');
+
+  // First ever visit: just save current month, no reset needed
+  if (!lastActiveMonth) {
+    localStorage.setItem('lastActiveMonth', currentMonthKey);
+    return;
+  }
+
+  // Same month: nothing to do
+  if (lastActiveMonth === currentMonthKey) return;
+
+  // New month detected → compute last month summary and show modal
+  const [ly, lm] = lastActiveMonth.split('-').map(Number);
+  const lastMonthDate = new Date(ly, lm - 1, 1);
+  const lastMonthDays = new Date(ly, lm, 0).getDate();
+
+  let totalDone = 0, totalPossible = 0, maxStreak = 0;
+  for (let day = 1; day <= lastMonthDays; day++) {
+    const d = new Date(ly, lm - 1, day);
+    const ds = formatDate(d);
+    habits.forEach(h => {
+      totalPossible++;
+      if (getCheck(h.id, ds)) totalDone++;
+    });
+  }
+  // Recompute max streak from last month data
+  habits.forEach(h => {
+    let streak = 0, best = 0;
+    for (let day = 1; day <= lastMonthDays; day++) {
+      const ds = formatDate(new Date(ly, lm - 1, day));
+      if (getCheck(h.id, ds)) { streak++; best = Math.max(best, streak); }
+      else streak = 0;
+    }
+    maxStreak = Math.max(maxStreak, best);
+  });
+  const pct = totalPossible > 0 ? Math.round((totalDone / totalPossible) * 100) : 0;
+
+  // Save archive
+  const archive = JSON.parse(localStorage.getItem('monthsArchive') || '[]');
+  archive.push({
+    month: lastActiveMonth,
+    label: `${MONTHS_AR[lm-1]} ${ly}`,
+    totalDone, totalPossible, pct, maxStreak,
+    habits: habits.map(h => ({ id: h.id, name: h.name, emoji: h.emoji }))
+  });
+  localStorage.setItem('monthsArchive', JSON.stringify(archive));
+
+  // Fill modal
+  document.getElementById('reset-month-title').textContent = `بداية ${MONTHS_AR[today.getMonth()]} ${today.getFullYear()} 🎯`;
+  document.getElementById('reset-month-desc').innerHTML =
+    `انتهى شهر <strong style="color:var(--accent)">${MONTHS_AR[lm-1]} ${ly}</strong> — حان وقت بداية جديدة ✨<br>
+     العادات تبقى كما هي، فقط البيانات اليومية تُعاد للصفر.`;
+  document.getElementById('reset-stat-done').textContent = totalDone;
+  document.getElementById('reset-stat-pct').textContent = pct + '%';
+  document.getElementById('reset-stat-streak').textContent = maxStreak;
+
+  // Show modal
+  document.getElementById('monthly-reset-overlay').style.display = 'flex';
+}
+
+function confirmMonthlyReset() {
+  // Clear only check data (keep habits list, subtasks, etc.)
+  checks = {};
+  localStorage.setItem('checks', JSON.stringify(checks));
+
+  // Reset streaks
+  habits.forEach(h => h.streak = 0);
+  save();
+
+  // Mark new month
+  localStorage.setItem('lastActiveMonth', getMonthKey(today));
+
+  closeResetModal();
+  showToast('🚀 تم إعادة تعيين الشهر بنجاح!');
+  renderAll();
+}
+
+function closeResetModal() {
+  document.getElementById('monthly-reset-overlay').style.display = 'none';
+  // Even if dismissed, mark month so it doesn't show again this month
+  localStorage.setItem('lastActiveMonth', getMonthKey(today));
+}
+
+// ============ HELPERS ============
+function getWeekDates(offset=0) {
+  const dates = [];
+  const now = new Date(today);
+  // Find Saturday (start of week in Arabic calendar)
+  const day = now.getDay();
+  // 0=Sun,1=Mon,...,6=Sat
+  const diffToSat = (day === 6) ? 0 : -(day + 1);
+  const sat = new Date(now);
+  sat.setDate(now.getDate() + diffToSat + (offset * 7));
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(sat);
+    d.setDate(sat.getDate() + i);
+    dates.push(d);
+  }
+  return dates;
+}
+
+function formatDate(d) {
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function isToday(d) { return formatDate(d) === formatDate(today); }
+function isFuture(d) { return d > today && !isToday(d); }
+
+function getCheck(habitId, dateStr) {
+  return !!(checks[`${habitId}_${dateStr}`]);
+}
+
+function setCheck(habitId, dateStr, val) {
+  if (val) checks[`${habitId}_${dateStr}`] = true;
+  else delete checks[`${habitId}_${dateStr}`];
+  localStorage.setItem('checks', JSON.stringify(checks));
+}
+
+function save() {
+  localStorage.setItem('habits', JSON.stringify(habits));
+  localStorage.setItem('checks', JSON.stringify(checks));
+}
+
+// ============ STATUS / RPG SYSTEM ============
+const STAT_KEYS = ['STR', 'AGI', 'PER', 'VIT', 'INT', 'LUK'];
+
+const DEFAULT_STATS_META = {
+  STR: { label: 'STR', icon: '💪' },
+  AGI: { label: 'AGI', icon: '⚡' },
+  PER: { label: 'PER', icon: '👁️' },
+  VIT: { label: 'VIT', icon: '❤️' },
+  INT: { label: 'INT', icon: '🧠' },
+  LUK: { label: 'LUK', icon: '🍀' },
+};
+
+const XP_PER_HABIT = 15;
+
+let character = JSON.parse(localStorage.getItem('character') || 'null') || {
+  level: 1,
+  xp: 0,
+  xpToNext: 100,
+  job: 'None',
+  title: 'مبتدئ',
+  points: 0,
+  statsMeta: JSON.parse(JSON.stringify(DEFAULT_STATS_META)),
+  statsBase: { STR: 10, AGI: 10, PER: 10, VIT: 10, INT: 10, LUK: 0 },
+  statsSpent: { STR: 0, AGI: 0, PER: 0, VIT: 0, INT: 0, LUK: 0 },
+  skills: [
+    { id: 1, name: 'فن اللامبالاة' },
+    { id: 2, name: 'بيع أي شيء' },
+  ],
+};
+
+// Migrate characters saved by older versions of this file (drop hp/mp,
+// backfill statsMeta if missing).
+(function normalizeCharacter() {
+  if (!character.statsMeta) character.statsMeta = JSON.parse(JSON.stringify(DEFAULT_STATS_META));
+  STAT_KEYS.forEach(key => {
+    if (!character.statsMeta[key]) character.statsMeta[key] = { ...DEFAULT_STATS_META[key] };
+  });
+  delete character.hp;
+  delete character.hpMax;
+  delete character.mp;
+  delete character.mpMax;
+  localStorage.setItem('character', JSON.stringify(character));
+})();
+
+let nextSkillId = Math.max(0, ...character.skills.map(s => s.id)) + 1;
+
+// Tracks which habit/date cells already granted XP, so unchecking/rechecking
+// the same cell never farms XP twice.
+let xpAwardedCells = JSON.parse(localStorage.getItem('xpAwardedCells') || '{}');
+
+// Which stat / skill row currently has its edit controls revealed (tap to
+// reveal, tap again or edit/delete to hide).
+let revealedStat = null;
+let revealedSkillId = null;
+
+// ============ QUICK EDIT MODAL (replaces prompt/confirm, which are
+// blocked inside sandboxed preview frames) ============
+let quickEditContext = null;
+
+function openQuickEdit(opts) {
+  quickEditContext = opts;
+  document.getElementById('quick-edit-title').textContent = opts.title;
+
+  document.getElementById('quick-edit-label1').textContent = opts.label1;
+  const input1 = document.getElementById('quick-edit-input1');
+  input1.value = opts.value1 || '';
+  input1.placeholder = opts.placeholder1 || '';
+
+  const field2 = document.getElementById('quick-edit-field2-wrap');
+  if (opts.label2) {
+    document.getElementById('quick-edit-label2').textContent = opts.label2;
+    const input2 = document.getElementById('quick-edit-input2');
+    input2.value = opts.value2 || '';
+    input2.placeholder = opts.placeholder2 || '';
+    field2.style.display = '';
+  } else {
+    field2.style.display = 'none';
+  }
+
+  document.getElementById('quick-edit-overlay').classList.add('open');
+  setTimeout(() => { input1.focus(); input1.select(); }, 50);
+}
+
+function closeQuickEdit(e) {
+  if (e && e.target !== document.getElementById('quick-edit-overlay')) return;
+  document.getElementById('quick-edit-overlay').classList.remove('open');
+  quickEditContext = null;
+}
+
+function saveQuickEdit() {
+  if (!quickEditContext) return;
+  const v1 = document.getElementById('quick-edit-input1').value.trim();
+  const v2 = document.getElementById('quick-edit-input2').value.trim();
+  const { type, payload } = quickEditContext;
+
+  if (type === 'job') {
+    character.job = v1 || 'None';
+  } else if (type === 'title') {
+    character.title = v1 || 'مبتدئ';
+  } else if (type === 'addSkill') {
+    if (!v1) { closeQuickEdit(); return; }
+    character.skills.push({ id: nextSkillId++, name: v1 });
+    showToast('✅ تمت إضافة المهارة');
+  } else if (type === 'editSkill') {
+    const sk = character.skills.find(s => s.id === payload.id);
+    if (sk && v1) sk.name = v1;
+    revealedSkillId = null;
+  } else if (type === 'statMeta') {
+    const meta = character.statsMeta[payload.key];
+    if (v1) meta.label = v1;
+    if (v2) meta.icon = v2;
+    revealedStat = null;
+  }
+
+  saveCharacter();
+  document.getElementById('quick-edit-overlay').classList.remove('open');
+  quickEditContext = null;
+  renderStatus();
+}
+
+// ---- Generic confirm modal ----
+let confirmCallback = null;
+
+function openConfirmModal(message, cb) {
+  confirmCallback = cb;
+  document.getElementById('confirm-message').textContent = message;
+  document.getElementById('confirm-overlay').classList.add('open');
+}
+
+function closeConfirmModal(e) {
+  if (e && e.target !== document.getElementById('confirm-overlay')) return;
+  document.getElementById('confirm-overlay').classList.remove('open');
+  confirmCallback = null;
+}
+
+function confirmModalYes() {
+  const cb = confirmCallback;
+  document.getElementById('confirm-overlay').classList.remove('open');
+  confirmCallback = null;
+  if (cb) cb();
+}
+
+function saveCharacter() {
+  localStorage.setItem('character', JSON.stringify(character));
+}
+
+function statValue(key) {
+  return character.statsBase[key] + character.statsSpent[key];
+}
+
+function grantHabitXP(habitId, dateStr) {
+  const cellKey = `${habitId}_${dateStr}`;
+  if (xpAwardedCells[cellKey]) return;
+  xpAwardedCells[cellKey] = true;
+  localStorage.setItem('xpAwardedCells', JSON.stringify(xpAwardedCells));
+  addXP(XP_PER_HABIT);
+}
+
+function addXP(amount) {
+  character.xp += amount;
+  let leveledUp = false;
+  while (character.xp >= character.xpToNext) {
+    character.xp -= character.xpToNext;
+    character.level++;
+    character.xpToNext = Math.round(character.xpToNext * 1.15);
+    character.points += 3;
+    leveledUp = true;
+  }
+  saveCharacter();
+  renderStatus();
+  if (leveledUp) {
+    showToast(`🎉 Level Up! وصلت إلى المستوى ${character.level}`);
+  }
+}
+
+function plusStat(key) {
+  if (character.points <= 0) return;
+  character.statsSpent[key]++;
+  character.points--;
+  saveCharacter();
+  renderStatus();
+}
+
+function minusStat(key) {
+  if (character.statsSpent[key] <= 0) return;
+  character.statsSpent[key]--;
+  character.points++;
+  saveCharacter();
+  renderStatus();
+}
+
+function toggleStatReveal(key) {
+  revealedStat = revealedStat === key ? null : key;
+  renderStatus();
+}
+
+function editStatMeta(key) {
+  const meta = character.statsMeta[key];
+  openQuickEdit({
+    type: 'statMeta',
+    payload: { key },
+    title: '✏️ تعديل الخاصية',
+    label1: 'اسم الخاصية',
+    value1: meta.label,
+    placeholder1: 'مثال: STR',
+    label2: 'الأيقونة (إيموجي)',
+    value2: meta.icon,
+    placeholder2: 'مثال: 💪',
+  });
+}
+
+function editJob() {
+  openQuickEdit({
+    type: 'job',
+    title: '✏️ تعديل Job',
+    label1: 'Job',
+    value1: character.job,
+    placeholder1: 'مثال: Wolf Assassin',
+  });
+}
+
+function editTitle() {
+  openQuickEdit({
+    type: 'title',
+    title: '✏️ تعديل Title',
+    label1: 'Title',
+    value1: character.title,
+    placeholder1: 'مثال: مبتدئ',
+  });
+}
+
+function toggleSkillReveal(id) {
+  revealedSkillId = revealedSkillId === id ? null : id;
+  renderStatus();
+}
+
+function addSkill() {
+  openQuickEdit({
+    type: 'addSkill',
+    title: '➕ إضافة مهارة جديدة',
+    label1: 'اسم المهارة',
+    value1: '',
+    placeholder1: 'مثال: فن اللامبالاة',
+  });
+}
+
+function editSkill(id) {
+  const sk = character.skills.find(s => s.id === id);
+  if (!sk) return;
+  openQuickEdit({
+    type: 'editSkill',
+    payload: { id },
+    title: '✏️ تعديل المهارة',
+    label1: 'اسم المهارة',
+    value1: sk.name,
+    placeholder1: 'اسم المهارة',
+  });
+}
+
+function deleteSkillItem(id) {
+  openConfirmModal('هل تريد حذف هذه المهارة؟', () => {
+    character.skills = character.skills.filter(s => s.id !== id);
+    saveCharacter();
+    revealedSkillId = null;
+    renderStatus();
+    showToast('🗑 تم حذف المهارة');
+  });
+}
+
+function renderStatus() {
+  const levelEl = document.getElementById('status-level');
+  if (!levelEl) return; // panel not present in DOM
+
+  levelEl.textContent = character.level;
+  document.getElementById('status-job').textContent = character.job;
+  document.getElementById('status-title').textContent = character.title;
+
+  // XP bar
+  const xpPct = character.xpToNext > 0 ? Math.min(100, Math.round((character.xp / character.xpToNext) * 100)) : 0;
+  document.getElementById('status-xp-fill').style.width = xpPct + '%';
+  document.getElementById('status-xp-text').textContent = `${character.xp}/${character.xpToNext}`;
+
+  // Stats grid — tap an item to reveal its edit (icon + name) button
+  document.getElementById('status-stats-grid').innerHTML = STAT_KEYS.map(key => {
+    const meta = character.statsMeta[key];
+    const revealed = revealedStat === key;
+    return `
+    <div class="status-stat-item ${revealed ? 'revealed' : ''}" onclick="toggleStatReveal('${key}')">
+      <span class="status-stat-icon">${meta.icon}</span>
+      <span class="status-stat-label">${meta.label}</span>
+      <span class="status-stat-value">${statValue(key)}</span>
+      ${revealed ? `<button class="status-stat-edit-btn" onclick="event.stopPropagation(); editStatMeta('${key}')" title="تعديل الاسم والأيقونة">✏️</button>` : ''}
+    </div>`;
+  }).join('');
+
+  // Points + distribution
+  document.getElementById('status-points').textContent = character.points;
+  document.getElementById('status-distribute').innerHTML = STAT_KEYS.map(key => {
+    const meta = character.statsMeta[key];
+    return `
+    <div class="status-dist-row">
+      <span class="status-dist-label">${meta.icon} ${meta.label}</span>
+      <span class="status-dist-value">${statValue(key)}</span>
+      <div class="status-dist-btns">
+        <button class="status-dist-btn minus" onclick="minusStat('${key}')" ${character.statsSpent[key] <= 0 ? 'disabled' : ''}>−</button>
+        <button class="status-dist-btn plus" onclick="plusStat('${key}')" ${character.points <= 0 ? 'disabled' : ''}>+</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Skills — tap the row to reveal its edit/delete buttons
+  const skillsList = document.getElementById('status-skills-list');
+  skillsList.innerHTML = character.skills.map(sk => {
+    const revealed = revealedSkillId === sk.id;
+    return `
+    <div class="status-skill-item ${revealed ? 'revealed' : ''}" onclick="toggleSkillReveal(${sk.id})">
+      <span class="status-skill-name">${sk.name}</span>
+      ${revealed ? `
+      <div class="status-skill-actions">
+        <button onclick="event.stopPropagation(); editSkill(${sk.id})" title="تعديل">✏️</button>
+        <button onclick="event.stopPropagation(); deleteSkillItem(${sk.id})" title="حذف">🗑</button>
+      </div>` : ''}
+    </div>`;
+  }).join('') || '<div class="status-skills-empty">لا توجد مهارات بعد</div>';
+}
+
+// ============ STATUS PAGE (isolated full-screen page) ============
+let statusParticlesGenerated = false;
+
+function openStatusPage() {
+  renderStatus();
+  const overlay = document.getElementById('status-page-overlay');
+  overlay.style.display = 'flex';
+
+  if (!statusParticlesGenerated) {
+    generateStatusParticles();
+    statusParticlesGenerated = true;
+  }
+
+  // Force a reflow so the opening transition actually animates
+  void overlay.offsetWidth;
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  // Re-trigger the scanline sweep every time the page opens
+  const scan = document.getElementById('status-page-scanline');
+  scan.classList.remove('run');
+  void scan.offsetWidth;
+  scan.classList.add('run');
+}
+
+function closeStatusPage(e) {
+  // If called from the backdrop click, only close when the backdrop itself was clicked
+  if (e && e.target !== document.getElementById('status-page-overlay')) return;
+  const overlay = document.getElementById('status-page-overlay');
+  overlay.classList.remove('open');
+  document.body.style.overflow = '';
+  setTimeout(() => { overlay.style.display = 'none'; }, 500);
+}
+
+function generateStatusParticles() {
+  const wrap = document.getElementById('status-page-particles');
+  let html = '';
+  for (let i = 0; i < 60; i++) {
+    const left = (Math.random() * 100).toFixed(2);
+    const top = (Math.random() * 100).toFixed(2);
+    const size = (Math.random() * 2 + 1).toFixed(1);
+    const delay = (Math.random() * 4).toFixed(2);
+    const dur = (2.5 + Math.random() * 3).toFixed(2);
+    html += `<span class="status-star" style="left:${left}%;top:${top}%;width:${size}px;height:${size}px;animation-delay:${delay}s;animation-duration:${dur}s;"></span>`;
+  }
+  wrap.innerHTML = html;
+}
+
+// ============ RENDER TABLE ============
+function renderTable() {
+  const dates = getWeekDates(currentWeek);
+  const head = document.getElementById('table-head');
+  const body = document.getElementById('table-body');
+  const weekLabel = document.getElementById('week-label');
+
+  // Week label
+  const startD = dates[0];
+  const endD = dates[6];
+  weekLabel.textContent = `${startD.getDate()} - ${endD.getDate()} ${MONTHS_AR[endD.getMonth()]}`;
+
+  // Head
+  let headHtml = '<tr><th>العادات</th>';
+  dates.forEach((d, i) => {
+    const cls = isToday(d) ? 'today-col' : '';
+    headHtml += `<th class="${cls}">
+      <div>${DAYS_AR[i]}</div>
+      <div style="font-size:13px;color:${isToday(d)?'var(--accent)':'var(--text)'};font-family:'Orbitron',monospace;">${d.getDate()}</div>
+    </th>`;
+  });
+  headHtml += '</tr>';
+  head.innerHTML = headHtml;
+
+  // Body
+  let bodyHtml = '';
+  habits.forEach(h => {
+    bodyHtml += `<tr draggable="true" data-habit-id="${h.id}">
+      <td><div class="habit-name">
+        <span class="drag-handle" title="اسحب لتغيير الترتيب">⠿</span>
+        <span class="habit-emoji">${h.emoji}</span>
+        <span>${h.name}</span>
+        ${h.streak > 0 ? `<span class="habit-streak">🔥${h.streak}د</span>` : ''}
+        <button class="edit-habit-btn" onclick="openEditModal(${h.id})" title="تعديل العادة">✏️</button>
+        <button class="delete-habit-btn" onclick="deleteHabit(${h.id})" title="حذف العادة">🗑</button>
+      </div></td>`;
+    dates.forEach(d => {
+      const ds = formatDate(d);
+      const checked = getCheck(h.id, ds);
+      const future = isFuture(d);
+      const todayCls = isToday(d) ? 'today-check' : '';
+      const futureCls = future ? 'future' : '';
+      bodyHtml += `<td class="check-cell">
+        <input type="checkbox" class="habit-check ${todayCls} ${futureCls}"
+          ${checked ? 'checked' : ''}
+          ${future ? 'disabled' : ''}
+          onchange="toggleCheck(${h.id},'${ds}',this.checked)"
+          title="${h.name} — ${d.getDate()} ${MONTHS_AR[d.getMonth()]}">
+      </td>`;
+    });
+    bodyHtml += '</tr>';
+  });
+
+  // Progress row
+  bodyHtml += '<tr class="progress-row"><td style="padding:16px 24px;font-size:11px;color:var(--text-muted);font-weight:700;">التقدم اليومي</td>';
+  dates.forEach(d => {
+    const ds = formatDate(d);
+    const done = habits.filter(h => getCheck(h.id, ds)).length;
+    const total = habits.length;
+    const pct = total > 0 ? Math.round((done/total)*100) : 0;
+    bodyHtml += `<td>
+      <div class="day-progress">
+        <div class="day-bar">
+          <div class="day-bar-fill" id="bar-${ds}" style="height:${pct}%"></div>
+        </div>
+        <div class="day-pct">${pct}%</div>
+      </div>
+    </td>`;
+  });
+  bodyHtml += '</tr>';
+
+  body.innerHTML = bodyHtml;
+  updateStats();
+
+  // ---- Drag & Drop setup ----
+  setupDragAndDrop();
+}
+
+// ============ DRAG & DROP ============
+let dragSrcId = null;
+
+function setupDragAndDrop() {
+  const tbody = document.getElementById('table-body');
+  const rows = tbody.querySelectorAll('tr[data-habit-id]');
+
+  rows.forEach(row => {
+    row.addEventListener('dragstart', e => {
+      dragSrcId = parseInt(row.dataset.habitId);
+      row.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+
+    row.addEventListener('dragend', () => {
+      row.classList.remove('dragging');
+      tbody.querySelectorAll('tr').forEach(r => {
+        r.classList.remove('drag-over', 'drag-over-bottom');
+      });
+    });
+
+    row.addEventListener('dragover', e => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      if (dragSrcId === parseInt(row.dataset.habitId)) return;
+      tbody.querySelectorAll('tr').forEach(r => r.classList.remove('drag-over', 'drag-over-bottom'));
+      const rect = row.getBoundingClientRect();
+      const midY = rect.top + rect.height / 2;
+      if (e.clientY < midY) {
+        row.classList.add('drag-over');
+      } else {
+        row.classList.add('drag-over-bottom');
+      }
+    });
+
+    row.addEventListener('dragleave', () => {
+      row.classList.remove('drag-over', 'drag-over-bottom');
+    });
+
+    row.addEventListener('drop', e => {
+      e.preventDefault();
+      const targetId = parseInt(row.dataset.habitId);
+      if (dragSrcId === targetId) return;
+
+      const srcIdx = habits.findIndex(h => h.id === dragSrcId);
+      const tgtIdx = habits.findIndex(h => h.id === targetId);
+      if (srcIdx === -1 || tgtIdx === -1) return;
+
+      const rect = row.getBoundingClientRect();
+      const midY = rect.top + rect.height / 2;
+      const insertAfter = e.clientY >= midY;
+
+      const [moved] = habits.splice(srcIdx, 1);
+      const newTgtIdx = habits.findIndex(h => h.id === targetId);
+      habits.splice(insertAfter ? newTgtIdx + 1 : newTgtIdx, 0, moved);
+
+      save();
+      showToast('✅ تم تغيير ترتيب العادات');
+      renderAll();
+    });
+  });
+}
+
+// ============ TOGGLE ============
+function toggleCheck(habitId, dateStr, val) {
+  setCheck(habitId, dateStr, val);
+  calcStreaks();
+  updateStats();
+  renderChartBars();
+
+  if (val) {
+    showToast('✅ أحسنت! عادة مكتملة');
+    // Confetti-like pulse
+    const ring = document.getElementById('progress-ring');
+    ring.style.filter = 'drop-shadow(0 0 10px #00c8ff)';
+    setTimeout(() => ring.style.filter = '', 600);
+    grantHabitXP(habitId, dateStr);
+  }
+  renderStatus();
+  save();
+}
+
+// ============ STREAKS ============
+function calcStreaks() {
+  habits.forEach(h => {
+    let streak = 0;
+    let d = new Date(today);
+    while (true) {
+      const ds = formatDate(d);
+      if (getCheck(h.id, ds)) {
+        streak++;
+        d.setDate(d.getDate() - 1);
+      } else break;
+    }
+    h.streak = streak;
+  });
+}
+
+// ============ STATS ============
+function updateStats() {
+  const todayStr = formatDate(today);
+  const done = habits.filter(h => getCheck(h.id, todayStr)).length;
+  const total = habits.length;
+  const pct = total > 0 ? Math.round((done/total)*100) : 0;
+
+  document.getElementById('total-done').textContent = done;
+
+  // Streak
+  const maxStreak = Math.max(...habits.map(h=>h.streak), 0);
+  document.getElementById('best-streak').textContent = maxStreak;
+
+  // Week
+  const dates = getWeekDates(0);
+  let weekDone=0, weekTotal=0;
+  dates.forEach(d => {
+    const ds = formatDate(d);
+    if (!isFuture(d)) {
+      habits.forEach(h => {
+        weekTotal++;
+        if (getCheck(h.id, ds)) weekDone++;
+      });
+    }
+  });
+  const weekPct = weekTotal>0 ? Math.round((weekDone/weekTotal)*100) : 0;
+  document.getElementById('week-pct').textContent = weekPct+'%';
+
+  // Month
+  const year = today.getFullYear(), month = today.getMonth();
+  const daysInMonth = new Date(year, month+1, 0).getDate();
+  let mDone=0, mTotal=0;
+  for (let day=1; day<=today.getDate(); day++) {
+    const d = new Date(year, month, day);
+    const ds = formatDate(d);
+    habits.forEach(h => {
+      mTotal++;
+      if (getCheck(h.id, ds)) mDone++;
+    });
+  }
+  const mPct = mTotal>0 ? Math.round((mDone/mTotal)*100) : 0;
+  document.getElementById('month-pct').textContent = mPct+'%';
+
+  // Ring
+  const ring = document.getElementById('progress-ring');
+  const offset = 314 - (314 * pct / 100);
+  ring.style.strokeDashoffset = offset;
+  document.getElementById('ring-pct').textContent = pct+'%';
+}
+
+// ============ CHART ============
+function renderChartBars() {
+  const container = document.getElementById('chart-bars');
+  const tabs = document.getElementById('week-tabs');
+  const dates = getWeekDates(currentWeek);
+
+  let html = '';
+  dates.forEach((d, i) => {
+    const ds = formatDate(d);
+    const done = habits.filter(h => getCheck(h.id, ds)).length;
+    const total = habits.length;
+    const pct = total > 0 ? (done/total)*100 : 0;
+    const highlight = isToday(d);
+    html += `<div class="chart-bar-wrap">
+      <div class="chart-bar-col">
+        <div class="chart-bar-inner" style="height:${pct}%;background:${highlight?'linear-gradient(to top, #00c8ff, rgba(0,200,255,0.4))':'linear-gradient(to top, rgba(0,200,255,0.5), rgba(0,200,255,0.1))'};"></div>
+      </div>
+      <div class="chart-label">${DAYS_EN[i]}</div>
+    </div>`;
+  });
+  container.innerHTML = html;
+
+  // Week tabs
+  let tabHtml = '';
+  for (let w=-3; w<=0; w++) {
+    tabHtml += `<button class="month-tab ${w===currentWeek?'active':''}" onclick="currentWeek=${w};renderAll()">
+      ${w===0?'هذا الأسبوع':w===-1?'الماضي':`-${Math.abs(w)} أسابيع`}
+    </button>`;
+  }
+  tabs.innerHTML = tabHtml;
+}
+
+// ============ ADD HABIT ============
+function handleAddHabit(e) {
+  if (e.key === 'Enter') addHabitFromInput();
+}
+
+function addHabitFromInput() {
+  const input = document.getElementById('new-habit-input');
+  const name = input.value.trim();
+  if (!name) return;
+  const emojis = ['⭐','🎯','💡','🌟','🏆','💎','🚀','🌙','☀️','🌿'];
+  habits.push({ id:nextId++, name, emoji:emojis[Math.floor(Math.random()*emojis.length)], streak:0 });
+  input.value = '';
+  save();
+  renderAll();
+  showToast('✨ تمت إضافة العادة بنجاح!');
+}
+
+function addHabitPrompt() {
+  document.getElementById('new-habit-input').focus();
+  document.getElementById('new-habit-input').scrollIntoView({ behavior:'smooth' });
+}
+
+// ============ DELETE HABIT ============
+function deleteHabit(habitId) {
+  const habit = habits.find(h => h.id === habitId);
+  if (!habit) return;
+  if (!confirm(`هل أنت متأكد من حذف عادة "${habit.name}"؟\nسيتم حذف جميع بياناتها.`)) return;
+  habits = habits.filter(h => h.id !== habitId);
+  // Remove all checks for this habit
+  Object.keys(checks).forEach(key => {
+    if (key.startsWith(habitId + '_')) delete checks[key];
+  });
+  save();
+  renderAll();
+  showToast('🗑️ تم حذف العادة بنجاح');
+}
+
+// ============ WEEK NAV ============
+function changeWeek(dir) {
+  currentWeek += dir;
+  if (currentWeek > 0) { currentWeek = 0; showToast('⚠️ لا يمكن التنقل للمستقبل'); return; }
+  renderAll();
+}
+
+// ============ TOAST ============
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ============ AI INSIGHTS (مبرمجة مسبقاً) ============
+function getAIInsights() {
+  const container = document.getElementById('ai-insights');
+  container.innerHTML = '<div class="insight-item"><div class="loading-dots"><span></span><span></span><span></span></div></div>';
+
+  const todayStr = formatDate(today);
+  const todayDone = habits.filter(h => getCheck(h.id, todayStr)).length;
+  const totalHabits = habits.length;
+  const pct = totalHabits > 0 ? Math.round((todayDone / totalHabits) * 100) : 0;
+  const maxStreak = Math.max(...habits.map(h => h.streak), 0);
+
+  const weekDates = getWeekDates(0);
+  let weekDone = 0, weekTotal = 0;
+  weekDates.forEach(d => {
+    const ds = formatDate(d);
+    if (!isFuture(d)) {
+      habits.forEach(h => {
+        weekTotal++;
+        if (getCheck(h.id, ds)) weekDone++;
+      });
+    }
+  });
+  const weekPct = weekTotal > 0 ? Math.round((weekDone / weekTotal) * 100) : 0;
+
+  // بناء الرؤى بناءً على البيانات
+  let insights = [];
+
+  // رؤية 1: أداء اليوم
+  if (pct === 100) {
+    insights.push({ emoji: '🏆', text: `رائع! أكملت <strong>جميع عاداتك</strong> اليوم (${todayDone}/${totalHabits}). يوم مثالي — استمر على هذا المستوى!` });
+  } else if (pct >= 60) {
+    insights.push({ emoji: '✅', text: `أداء جيد اليوم! أنجزت <strong>${todayDone} من ${totalHabits} عادات</strong>. لا تتوقف، أنت على الطريق الصحيح.` });
+  } else if (pct > 0) {
+    insights.push({ emoji: '💪', text: `بدأت اليوم بـ<strong>${todayDone} عادات</strong> من أصل ${totalHabits}. لا يزال الوقت أمامك لإكمال الباقي!` });
+  } else {
+    insights.push({ emoji: '🌅', text: `لم تسجّل أي إنجاز بعد اليوم. ابدأ بعادة واحدة الآن — <strong>الخطوة الأولى هي الأصعب</strong>.` });
+  }
+
+  // رؤية 2: السلاسل
+  if (maxStreak >= 7) {
+    insights.push({ emoji: '🔥', text: `سلسلة مذهلة! أنت تحافظ على عاداتك لـ<strong>${maxStreak} أيام متتالية</strong>. هذا مستوى الأبطال!` });
+  } else if (maxStreak >= 3) {
+    insights.push({ emoji: '⚡', text: `سلسلتك الحالية <strong>${maxStreak} أيام</strong> — أنت تبني عادة حقيقية. لا تكسرها اليوم!` });
+  } else if (maxStreak === 1) {
+    insights.push({ emoji: '🌱', text: `يوم أول في سلسلتك! <strong>الاستمرارية هي المفتاح</strong>. كرر ذلك غداً وابدأ عادتك الجديدة.` });
+  } else {
+    insights.push({ emoji: '🎯', text: `ابدأ سلسلة انجاز جديدة اليوم. <strong>21 يوماً</strong> تكفي لترسيخ أي عادة في حياتك.` });
+  }
+
+  // رؤية 3: أداء الأسبوع
+  if (weekPct >= 80) {
+    insights.push({ emoji: '📈', text: `أداء الأسبوع <strong>${weekPct}%</strong> — ممتاز جداً! أنت من القلائل الذين يلتزمون بعاداتهم بهذا المستوى.` });
+  } else if (weekPct >= 50) {
+    insights.push({ emoji: '📊', text: `نسبة الأسبوع <strong>${weekPct}%</strong>. نصيحة: حدد وقتاً ثابتاً لكل عادة يومياً لتحسين الالتزام.` });
+  } else if (totalHabits === 0) {
+    insights.push({ emoji: '➕', text: `لا توجد عادات مضافة بعد. <strong>أضف عادتك الأولى</strong> وابدأ رحلتك نحو حياة أفضل اليوم!` });
+  } else {
+    insights.push({ emoji: '💡', text: `نسبة الأسبوع <strong>${weekPct}%</strong>. جرّب تقليل عدد العادات والتركيز على <strong>3 عادات أساسية</strong> فقط.` });
+  }
+
+  setTimeout(() => {
+    container.innerHTML = insights.map(i => `
+      <div class="insight-item">
+        <div class="insight-emoji">${i.emoji}</div>
+        <div class="insight-text">${i.text}</div>
+      </div>`).join('');
+  }, 900);
+}
+
+// ============ AI CHAT (مبرمجة مسبقاً) ============
+const aiResponses = [
+  // تحفيز
+  { keywords: ['تحفيز','حماس','محفز','حفز','شجع'], reply: '💪 أنت قادر على أكثر مما تتخيل! كل عادة صغيرة اليوم هي استثمار في نسخة أفضل منك غداً. ابدأ الآن ولو بخطوة واحدة! 🚀' },
+  { keywords: ['ملل','ممل','تعب','متعب','مرهق'], reply: '😴 الإرهاق طبيعي! جسمك يحتاج راحة أحياناً. لكن تذكر: الالتزام ليس الكمال — حتى 50% إنجاز أفضل من الصفر. خذ نفساً وعد! 🌟' },
+  // إحصاءات
+  { keywords: ['كم','عدد','كيف','أداء','نسبة','إحصاء'], reply: () => {
+    const todayStr = formatDate(today);
+    const done = habits.filter(h => getCheck(h.id, todayStr)).length;
+    const total = habits.length;
+    const pct = total > 0 ? Math.round((done/total)*100) : 0;
+    const maxStreak = Math.max(...habits.map(h => h.streak), 0);
+    return `📊 إحصاءاتك اليوم:\n• أنجزت ${done} من ${total} عادات (${pct}%)\n• أطول سلسلة: ${maxStreak} يوم\nاستمر! 🎯`;
+  }},
+  // عادات
+  { keywords: ['عادة','عادات','مهمة','أفضل عادة','جديدة'], reply: '📝 أفضل العادات تبدأ صغيرة: شرب الماء، المشي 10 دقائق، قراءة صفحة واحدة. الاستمرارية أهم من الحجم — ابدأ صغيراً وكبّر تدريجياً! 🌱' },
+  // نوم
+  { keywords: ['نوم','نام','ينام','تنام','نعاس','مبكر'], reply: '😴 النوم المبكر يبدأ بالاستيقاظ المبكر! جرّب: أغلق الشاشات قبل النوم بساعة، حافظ على نفس وقت النوم يومياً. جسمك سيتكيف خلال أسبوع. 🌙' },
+  // رياضة
+  { keywords: ['رياضة','تمرين','تمارين','جري','مشي','جيم','يوغا'], reply: '🏃 الرياضة المنتظمة تبدأ بـ 10 دقائق فقط! لا تحتاج صالة — المشي، تمارين المنزل، أو الدراجة كافية. المهم الاستمرار لا الشدة. 💪' },
+  // تأمل
+  { keywords: ['تأمل','تنفس','ذهن','هدوء','استرخاء'], reply: '🧘 التأمل لا يحتاج ساعات — 5 دقائق صباحاً تكفي! ابدأ بتنفس عميق: شهيق 4 ثوانٍ، احبس 4 ثوانٍ، زفير 4 ثوانٍ. كرر 4 مرات. ✨' },
+  // أكل/صحة
+  { keywords: ['أكل','طعام','غذاء','صحة','سكر','ماء'], reply: '🥗 التغذية الصحية لا تعني الحرمان! استبدل وجبة خفيفة واحدة يومياً بفاكهة أو مكسرات. الماء أولاً — اشرب كوباً قبل كل وجبة. 💧' },
+  // شكر/مرحبا
+  { keywords: ['شكراً','شكرا','مرحبا','هلا','أهلاً','صباح','مساء'], reply: '👋 أهلاً وسهلاً! أنا هنا لمساعدتك في رحلة عاداتك. يمكنني تقديم نصائح وتحليل أدائك. ما الذي تريد تحسينه اليوم؟ 🌟' },
+  // سلسلة
+  { keywords: ['سلسلة','streak','يوم','أيام','متتالي'], reply: () => {
+    const maxStreak = Math.max(...habits.map(h => h.streak), 0);
+    if (maxStreak === 0) return '🔥 لم تبدأ سلسلتك بعد! ابدأ اليوم — يوم واحد يكفي لبدء العادة. السلاسل الطويلة بدأت كلها بيوم أول! 💪';
+    if (maxStreak < 3) return `🌱 سلسلتك ${maxStreak} يوم — بداية ممتازة! حافظ على الزخم، اليوم التالي دائماً أسهل من السابق. 🔥`;
+    return `🔥 سلسلة رائعة ${maxStreak} يوم! أنت تبني إرادة حديدية. لا تكسرها — كل يوم يضاف يجعلها أقوى! 🏆`;
+  }},
+];
+
+const defaultReplies = [
+  '💡 نصيحة اليوم: ربط العادة الجديدة بعادة قديمة يزيد احتمال الالتزام بها 3 أضعاف! مثلاً: قراءة الكتاب بعد القهوة الصباحية. ☕📚',
+  '🎯 التركيز على 3 عادات أساسية أفعل من محاولة تغيير كل شيء دفعة واحدة. اختر أهم 3 عادات وأتقنها أولاً!',
+  '⏰ أفضل وقت لبناء العادات هو الصباح الباكر — عقلك أكثر صفاءً وإرادتك أقوى. حاول تنفيذ أهم عاداتك قبل الظهر.',
+  '🌊 لا بأس بكسر السلسلة أحياناً — القاعدة الذهبية: لا تفوّت يومين متتاليين أبداً! يوم راحة مقبول، يومان بداية نمط سيء.',
+  '📈 التقدم ليس دائماً خطاً مستقيماً — الانخفاضات طبيعية. المهم أن متوسطك يتحسن أسبوعاً بعد أسبوع.',
+];
+
+function sendAIMessage() {
+  const input = document.getElementById('ai-input-field');
+  const msg = input.value.trim();
+  if (!msg) return;
+
+  addChatMsg(msg, 'user');
+  input.value = '';
+
+  // Loading
+  const loadingId = 'load_' + Date.now();
+  const chat = document.getElementById('ai-chat');
+  chat.innerHTML += `<div class="msg ai" id="${loadingId}"><div class="loading-dots"><span></span><span></span><span></span></div></div>`;
+  chat.scrollTop = chat.scrollHeight;
+
+  setTimeout(() => {
+    document.getElementById(loadingId)?.remove();
+    const reply = getSmartReply(msg);
+    addChatMsg(reply, 'ai');
+  }, 700 + Math.random() * 500);
+}
+
+function getSmartReply(msg) {
+  const lower = msg.toLowerCase();
+  for (const item of aiResponses) {
+    if (item.keywords.some(k => lower.includes(k))) {
+      return typeof item.reply === 'function' ? item.reply() : item.reply;
+    }
+  }
+  return defaultReplies[Math.floor(Math.random() * defaultReplies.length)];
+}
+
+function addChatMsg(text, type) {
+  const chat = document.getElementById('ai-chat');
+  const time = new Date().toLocaleTimeString('ar',{hour:'2-digit',minute:'2-digit'});
+  chat.innerHTML += `<div class="msg ${type}">
+    ${text}
+    <div class="msg-time">${time}</div>
+  </div>`;
+  chat.scrollTop = chat.scrollHeight;
+}
+
+// ============ EDIT MODAL ============
+const ALL_EMOJIS = [
+  '⭐','🎯','💡','🌟','🏆','💎','🚀','🌙','☀️','🌿','💪','🧘','📝','🎨','🎵','📚','🏃','🚴',
+  '🥗','💧','😴','⏰','🔥','✨','🌈','🎭','🧠','❤️','🌺','🍀','🦋','🐉','⚡','🛡️','🎪',
+  '🏋️','🤸','🧗','🏊','🎸','🎹','✍️','🖊️','📖','🔬','🔭','💻','📱','🎮','🌍','🏔️',
+  '🌊','🌸','🌻','🍁','🦁','🐯','🦅','🐬','🐘','🦊','🌵','🎋','🍃','🌾','🔮','💫',
+  '🏅','🎖️','🥇','🎗️','🎀','🎁','🧩','♟️','🎲','🃏','🀄','🎯','🎳','🏹','⚽','🏀',
+  '🍎','🥦','🥕','🍊','🍋','🍇','🥑','🌰','🥜','🫖','☕','🧃','🫙','🥤','🍵','🧊',
+  '🛁','🚿','🧹','🧺','🪴','🖼️','🧸','🪬','🧿','📿','💒','🏯','🗼','⛩️','🕌','🕍',
+];
+
+let editingHabitId = null;
+let selectedEmoji = '⭐';
+
+function openEditModal(habitId) {
+  const habit = habits.find(h => h.id === habitId);
+  if (!habit) return;
+  editingHabitId = habitId;
+  selectedEmoji = habit.emoji;
+
+  document.getElementById('edit-habit-name').value = habit.name;
+  document.getElementById('edit-emoji-preview').textContent = habit.emoji;
+  document.getElementById('emoji-search-input').value = '';
+  renderEmojiGrid(ALL_EMOJIS);
+
+  document.getElementById('edit-modal-overlay').classList.add('open');
+  setTimeout(() => document.getElementById('edit-habit-name').focus(), 300);
+}
+
+function closeEditModal(e) {
+  if (e && e.target !== document.getElementById('edit-modal-overlay')) return;
+  document.getElementById('edit-modal-overlay').classList.remove('open');
+  editingHabitId = null;
+}
+
+function renderEmojiGrid(emojis) {
+  const grid = document.getElementById('emoji-grid');
+  grid.innerHTML = emojis.map(em => `
+    <button class="emoji-btn ${em === selectedEmoji ? 'selected' : ''}"
+      onclick="selectEmoji('${em}')" title="${em}">${em}</button>
+  `).join('');
+}
+
+function selectEmoji(em) {
+  selectedEmoji = em;
+  document.getElementById('edit-emoji-preview').textContent = em;
+  renderEmojiGrid(getFilteredEmojis());
+}
+
+function getFilteredEmojis() {
+  const q = document.getElementById('emoji-search-input').value.trim();
+  if (!q) return ALL_EMOJIS;
+  // simple filter: try to match Unicode name — just return all for now since emoji names aren't available
+  return ALL_EMOJIS;
+}
+
+function filterEmojis(q) {
+  renderEmojiGrid(getFilteredEmojis());
+}
+
+function saveHabitEdit() {
+  if (!editingHabitId) return;
+  const name = document.getElementById('edit-habit-name').value.trim();
+  if (!name) { showToast('⚠️ أدخل اسم العادة'); return; }
+
+  const habit = habits.find(h => h.id === editingHabitId);
+  if (!habit) return;
+  habit.name = name;
+  habit.emoji = selectedEmoji;
+
+  save();
+  renderAll();
+  document.getElementById('edit-modal-overlay').classList.remove('open');
+  editingHabitId = null;
+  showToast('✏️ تم تعديل العادة بنجاح!');
+}
+
+// Close modal on Escape key
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.getElementById('edit-modal-overlay').classList.remove('open');
+    document.getElementById('quick-edit-overlay').classList.remove('open');
+    document.getElementById('confirm-overlay').classList.remove('open');
+    quickEditContext = null;
+    confirmCallback = null;
+    if (document.getElementById('status-page-overlay').classList.contains('open')) {
+      closeStatusPage();
+    }
+  }
+  if (e.key === 'Enter' && document.getElementById('edit-modal-overlay').classList.contains('open')) {
+    saveHabitEdit();
+  }
+  if (e.key === 'Enter' && document.getElementById('quick-edit-overlay').classList.contains('open')) {
+    saveQuickEdit();
+  }
+});
+
+
+// ============ PROGRESS CHART ============
+let currentChartView = 'week';
+
+function switchChartView(view, btn) {
+  currentChartView = view;
+  document.querySelectorAll('.chart-view-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderProgressChart();
+}
+
+function getProgressData() {
+  const data = { labels: [], values: [], total: 0, done: 0, best: 0, avg: 0 };
+
+  if (currentChartView === 'week') {
+    // Last 7 days
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(today);
+      d.setDate(today.getDate() - i);
+      const ds = formatDate(d);
+      const done = habits.filter(h => getCheck(h.id, ds)).length;
+      const total = habits.length;
+      const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+      data.labels.push(`${DAYS_AR[(d.getDay() + 1) % 7]}\n${d.getDate()}`);
+      data.values.push(pct);
+      if (!isFuture(d)) { data.total++; data.done += done; }
+    }
+  } else if (currentChartView === 'month') {
+    // Each day of current month
+    const year = today.getFullYear(), month = today.getMonth();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    for (let day = 1; day <= daysInMonth; day++) {
+      const d = new Date(year, month, day);
+      const ds = formatDate(d);
+      const done = habits.filter(h => getCheck(h.id, ds)).length;
+      const total = habits.length;
+      const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+      // Only label every 5 days to avoid crowding
+      data.labels.push(day % 5 === 1 || day === daysInMonth ? String(day) : '');
+      data.values.push(isFuture(d) ? null : pct);
+      if (!isFuture(d)) { data.total++; data.done += done; }
+    }
+  } else {
+    // year: each month
+    const year = today.getFullYear();
+    for (let m = 0; m < 12; m++) {
+      const daysInMonth = new Date(year, m + 1, 0).getDate();
+      let mDone = 0, mDays = 0;
+      for (let day = 1; day <= daysInMonth; day++) {
+        const d = new Date(year, m, day);
+        if (isFuture(d)) continue;
+        const ds = formatDate(d);
+        const done = habits.filter(h => getCheck(h.id, ds)).length;
+        const total = habits.length;
+        if (total > 0) { mDone += done / total * 100; mDays++; }
+      }
+      const pct = mDays > 0 ? Math.round(mDone / mDays) : null;
+      data.labels.push(MONTHS_AR[m].slice(0, 3));
+      data.values.push(pct);
+      if (pct !== null) { data.total++; data.done += (pct / 100); }
+    }
+  }
+
+  const validVals = data.values.filter(v => v !== null);
+  data.best = validVals.length > 0 ? Math.max(...validVals) : 0;
+  data.avg = validVals.length > 0 ? Math.round(validVals.reduce((a, b) => a + b, 0) / validVals.length) : 0;
+  return data;
+}
+
+function renderProgressChart() {
+  const data = getProgressData();
+  renderSummaryCards(data);
+  renderSVGChart(data);
+  renderLegend();
+}
+
+function renderSummaryCards(data) {
+  const validVals = data.values.filter(v => v !== null);
+  const avg = data.avg;
+  const best = data.best;
+  const doneCount = validVals.filter(v => v >= 80).length;
+
+  const viewLabel = currentChartView === 'week' ? 'الأسبوع' : currentChartView === 'month' ? 'الشهر' : 'السنة';
+
+  document.getElementById('chart-summary-cards').innerHTML = `
+    <div class="chart-sum-card" style="--sum-color:#00c8ff;">
+      <div class="sum-label">متوسط ${viewLabel}</div>
+      <div class="sum-value">${avg}%</div>
+      <div class="sum-sub">معدل الإنجاز</div>
+    </div>
+    <div class="chart-sum-card" style="--sum-color:#10b981;">
+      <div class="sum-label">أفضل يوم</div>
+      <div class="sum-value">${best}%</div>
+      <div class="sum-sub">أعلى إنجاز</div>
+    </div>
+    <div class="chart-sum-card" style="--sum-color:#f59e0b;">
+      <div class="sum-label">أيام ممتازة</div>
+      <div class="sum-value">${doneCount}</div>
+      <div class="sum-sub">فوق 80%</div>
+    </div>
+  `;
+}
+
+function renderSVGChart(data) {
+  const svg = document.getElementById('progress-svg');
+  const W = 900, H = 220;
+  const padL = 36, padR = 16, padT = 16, padB = 36;
+  const chartW = W - padL - padR;
+  const chartH = H - padT - padB;
+
+  const vals = data.values;
+  const n = vals.length;
+
+  // points (skip nulls)
+  const points = [];
+  vals.forEach((v, i) => {
+    if (v === null) return;
+    const x = padL + (n === 1 ? chartW / 2 : (i / (n - 1)) * chartW);
+    const y = padT + chartH - (v / 100) * chartH;
+    points.push({ x, y, v, i, label: data.labels[i] });
+  });
+
+  // Build polyline path
+  const linePath = points.map((p, idx) => `${idx === 0 ? 'M' : 'L'}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
+  const areaPath = points.length > 0
+    ? `${linePath} L${points[points.length - 1].x.toFixed(1)},${(padT + chartH).toFixed(1)} L${points[0].x.toFixed(1)},${(padT + chartH).toFixed(1)} Z`
+    : '';
+
+  // Grid lines (0, 25, 50, 75, 100)
+  let gridHtml = '';
+  [0, 25, 50, 75, 100].forEach(pct => {
+    const y = padT + chartH - (pct / 100) * chartH;
+    gridHtml += `<line class="chart-grid-line" x1="${padL}" y1="${y.toFixed(1)}" x2="${W - padR}" y2="${y.toFixed(1)}"/>`;
+    gridHtml += `<text class="chart-axis-label" x="${padL - 4}" y="${(y + 4).toFixed(1)}" text-anchor="end">${pct}</text>`;
+  });
+
+  // X axis labels
+  let xLabels = '';
+  const labelStep = Math.max(1, Math.floor(n / 12));
+  data.labels.forEach((lbl, i) => {
+    if (!lbl) return;
+    const x = padL + (n === 1 ? chartW / 2 : (i / (n - 1)) * chartW);
+    const lines = lbl.split('\n');
+    lines.forEach((line, li) => {
+      xLabels += `<text class="chart-axis-label" x="${x.toFixed(1)}" y="${(padT + chartH + 14 + li * 12).toFixed(1)}" text-anchor="middle">${line}</text>`;
+    });
+  });
+
+  // Dots with tooltip triggers
+  let dotsHtml = '';
+  points.forEach(p => {
+    dotsHtml += `<circle class="chart-dot" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="4"
+      fill="${p.v >= 80 ? '#10b981' : p.v >= 50 ? '#00c8ff' : p.v >= 25 ? '#f59e0b' : '#ef4444'}"
+      stroke="var(--bg)" stroke-width="2"
+      onmouseenter="showChartTooltip(event, '${p.label.replace(/\n/,' ')}', ${p.v})"
+      onmouseleave="hideChartTooltip()"/>`;
+  });
+
+  // Gradient defs
+  const gradDef = `<defs>
+    <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00c8ff"/>
+      <stop offset="50%" stop-color="#7c3aed"/>
+      <stop offset="100%" stop-color="#10b981"/>
+    </linearGradient>
+    <linearGradient id="areaGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#00c8ff" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#00c8ff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>`;
+
+  // Average line
+  const avgY = padT + chartH - (data.avg / 100) * chartH;
+  const avgLine = data.avg > 0 ? `
+    <line x1="${padL}" y1="${avgY.toFixed(1)}" x2="${W - padR}" y2="${avgY.toFixed(1)}"
+      stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="6,4" opacity="0.6"/>
+    <text class="chart-axis-label" x="${W - padR + 2}" y="${(avgY + 4).toFixed(1)}" fill="#f59e0b" font-size="9">متوسط</text>
+  ` : '';
+
+  svg.innerHTML = `
+    ${gradDef}
+    ${gridHtml}
+    ${xLabels}
+    ${areaPath ? `<path d="${areaPath}" fill="url(#areaGrad)" class="chart-area-path"/>` : ''}
+    ${linePath ? `<path d="${linePath}" class="chart-line-path" stroke="url(#lineGrad)"/>` : ''}
+    ${avgLine}
+    ${dotsHtml}
+  `;
+}
+
+function renderLegend() {
+  document.getElementById('chart-legend').innerHTML = `
+    <div class="legend-item"><div class="legend-dot" style="background:#10b981;"></div> ممتاز (≥80%)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#00c8ff;"></div> جيد (50–79%)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#f59e0b;"></div> مقبول (25–49%)</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#ef4444;"></div> ضعيف (<25%)</div>
+    <div class="legend-item" style="margin-right:auto;">
+      <div style="width:22px;height:2px;background:#f59e0b;border-top:2px dashed #f59e0b;opacity:0.7;"></div>
+      خط المتوسط
+    </div>
+  `;
+}
+
+function showChartTooltip(e, label, value) {
+  const tt = document.getElementById('chart-tooltip');
+  document.getElementById('tt-label').textContent = label;
+  document.getElementById('tt-value').textContent = value + '%';
+  tt.style.color = value >= 80 ? '#10b981' : value >= 50 ? '#00c8ff' : value >= 25 ? '#f59e0b' : '#ef4444';
+  document.getElementById('tt-value').style.color = tt.style.color;
+
+  const wrap = tt.parentElement.getBoundingClientRect();
+  const svgEl = document.getElementById('progress-svg');
+  const svgRect = svgEl.getBoundingClientRect();
+  const ex = e.clientX - svgRect.left;
+  const ey = e.clientY - svgRect.top;
+  tt.style.left = ex + 'px';
+  tt.style.top = ey + 'px';
+  tt.classList.add('visible');
+}
+
+function hideChartTooltip() {
+  document.getElementById('chart-tooltip').classList.remove('visible');
+}
+
+// ============ OVERVIEW SECTION ============
+function renderOverview() {
+  renderOverallStats();
+  renderAnalysisTable();
+  renderTopHabits();
+}
+
+function renderOverallStats() {
+  const year = today.getFullYear(), month = today.getMonth();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const goalPerHabit = daysInMonth;
+  const totalGoal = habits.length * goalPerHabit;
+
+  let totalDone = 0;
+  for (let day = 1; day <= today.getDate(); day++) {
+    const d = new Date(year, month, day);
+    const ds = formatDate(d);
+    habits.forEach(h => { if (getCheck(h.id, ds)) totalDone++; });
+  }
+
+  const totalLeft = Math.max(0, totalGoal - totalDone);
+  const pct = totalGoal > 0 ? Math.round((totalDone / totalGoal) * 100) : 0;
+
+  // Donut arcs
+  const circumference = 2 * Math.PI * 52; // 326.73
+  const doneDash = (pct / 100) * circumference;
+  const leftDash = ((100 - pct) / 100) * circumference;
+
+  const doneEl = document.getElementById('overall-donut-done');
+  const leftEl = document.getElementById('overall-donut-left');
+  if (doneEl) {
+    doneEl.style.strokeDashoffset = circumference - doneDash;
+  }
+  if (leftEl) {
+    // offset the left arc to start where done ends
+    leftEl.style.strokeDasharray = `${leftDash} ${doneDash + 1}`;
+    leftEl.style.strokeDashoffset = circumference - doneDash;
+  }
+
+  const pctEl = document.getElementById('overall-pct');
+  if (pctEl) pctEl.textContent = pct + '%';
+
+  const ovGoal = document.getElementById('ov-goal');
+  const ovDone = document.getElementById('ov-done');
+  const ovLeft = document.getElementById('ov-left');
+  const ovStreak = document.getElementById('ov-streak');
+  if (ovGoal) ovGoal.textContent = totalGoal;
+  if (ovDone) ovDone.textContent = totalDone;
+  if (ovLeft) ovLeft.textContent = totalLeft;
+  if (ovStreak) ovStreak.textContent = today.getDate();
+}
+
+function renderAnalysisTable() {
+  const tbody = document.getElementById('analysis-tbody');
+  if (!tbody) return;
+
+  const year = today.getFullYear(), month = today.getMonth();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const daysSoFar = today.getDate();
+
+  let rows = habits.map(h => {
+    let done = 0;
+    for (let day = 1; day <= daysSoFar; day++) {
+      const ds = formatDate(new Date(year, month, day));
+      if (getCheck(h.id, ds)) done++;
+    }
+    const goal = daysSoFar;
+    const left = Math.max(0, goal - done);
+    const pct = goal > 0 ? Math.round((done / goal) * 100) : 0;
+    return { h, goal, done, left, pct };
+  });
+
+  // Sort by pct descending
+  rows.sort((a, b) => b.pct - a.pct);
+
+  const getColor = pct => pct >= 80 ? '#10b981' : pct >= 50 ? '#00c8ff' : pct >= 25 ? '#f59e0b' : '#ef4444';
+
+  tbody.innerHTML = rows.map(r => `
+    <tr>
+      <td style="text-align:right;font-size:12px;font-weight:600;white-space:nowrap;padding-right:16px;">
+        <span style="margin-left:6px;">${r.h.emoji}</span>${r.h.name}
+      </td>
+      <td><span class="an-goal">${r.goal}</span></td>
+      <td><span class="an-actual">${r.done}</span></td>
+      <td><span class="an-left">${r.left}</span></td>
+      <td style="min-width:90px;">
+        <div class="an-bar-wrap">
+          <div class="an-bar">
+            <div class="an-bar-fill" style="width:${r.pct}%;background:${getColor(r.pct)};box-shadow:0 0 6px ${getColor(r.pct)}55;"></div>
+          </div>
+        </div>
+      </td>
+      <td><span class="an-pct" style="color:${getColor(r.pct)};">${r.pct}%</span></td>
+    </tr>
+  `).join('');
+}
+
+function renderTopHabits() {
+  const list = document.getElementById('top-habits-list');
+  if (!list) return;
+
+  const year = today.getFullYear(), month = today.getMonth();
+  const daysSoFar = today.getDate();
+
+  let items = habits.map(h => {
+    let done = 0;
+    for (let day = 1; day <= daysSoFar; day++) {
+      const ds = formatDate(new Date(year, month, day));
+      if (getCheck(h.id, ds)) done++;
+    }
+    const pct = daysSoFar > 0 ? Math.round((done / daysSoFar) * 100) : 0;
+    return { h, done, pct };
+  });
+
+  items.sort((a, b) => b.pct - a.pct);
+  const top = items.slice(0, 10);
+
+  const getColor = pct => pct >= 80 ? '#10b981' : pct >= 50 ? '#00c8ff' : pct >= 25 ? '#f59e0b' : '#ef4444';
+  const rankClass = i => i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : '';
+
+  list.innerHTML = top.map((item, i) => `
+    <div class="top-habit-item">
+      <div class="top-habit-rank ${rankClass(i)}">${i + 1}</div>
+      <div class="top-habit-emoji">${item.h.emoji}</div>
+      <div class="top-habit-name">${item.h.name}</div>
+      ${item.h.streak > 0 ? `<div class="top-habit-streak">🔥${item.h.streak}</div>` : ''}
+      <div class="top-habit-pct" style="color:${getColor(item.pct)};">${item.pct}%</div>
+    </div>
+  `).join('') || '<div style="padding:20px;text-align:center;font-size:12px;color:var(--text-muted);">أضف عادات لعرضها هنا</div>';
+}
+
+// ============ SUB-TASKS ============
+let subtasks = JSON.parse(localStorage.getItem('subtasks') || 'null') || {
+  1: [
+    { id: 101, text: 'مراجعة أهداف اليوم', done: false, priority: 'high' },
+    { id: 102, text: 'قراءة 20 صفحة', done: false, priority: 'med' },
+    { id: 103, text: 'شرب 8 أكواب ماء', done: true,  priority: 'low' },
+  ],
+  2: [
+    { id: 201, text: 'تحضير تقرير الأسبوع', done: false, priority: 'high' },
+    { id: 202, text: 'التواصل مع الفريق', done: false, priority: 'med' },
+    { id: 203, text: 'مراجعة الميزانية', done: true,  priority: 'low' },
+  ]
+};
+let nextStId = 300;
+
+function saveSubtasks() {
+  localStorage.setItem('subtasks', JSON.stringify(subtasks));
+}
+
+function renderSubtasks(board) {
+  const list = document.getElementById(`subtask-list-${board}`);
+  const items = subtasks[board] || [];
+
+  if (items.length === 0) {
+    list.innerHTML = `
+      <div class="subtask-empty">
+        <div class="empty-icon">📭</div>
+        <div>لا توجد مهام بعد — أضف مهمتك الأولى</div>
+      </div>`;
+  } else {
+    const priorityLabel = { high: 'عاجل', med: 'متوسط', low: 'منخفض' };
+    const priorityClass = { high: 'priority-high', med: 'priority-med', low: 'priority-low' };
+    list.innerHTML = items.map(t => `
+      <div class="subtask-item subtask-item-enter" id="st-item-${t.id}">
+        <div class="subtask-checkbox-wrap">
+          <input type="checkbox" class="subtask-checkbox"
+            ${t.done ? 'checked' : ''}
+            onchange="toggleSubtask(${board}, ${t.id}, this.checked)">
+        </div>
+        <span class="subtask-text ${t.done ? 'done' : ''}">${t.text}</span>
+        <span class="subtask-priority ${priorityClass[t.priority]}">${priorityLabel[t.priority]}</span>
+        <button class="subtask-delete-btn" onclick="deleteSubtask(${board}, ${t.id})">✕</button>
+      </div>
+    `).join('');
+  }
+
+  // Update stats
+  const done = items.filter(t => t.done).length;
+  const total = items.length;
+  const pending = total - done;
+  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+
+  document.getElementById(`st-badge-${board}`).textContent = `${done} / ${total}`;
+  document.getElementById(`st-prog-${board}`).style.width = pct + '%';
+  document.getElementById(`st-done-${board}`).textContent = done;
+  document.getElementById(`st-pending-${board}`).textContent = pending;
+  document.getElementById(`st-pct-${board}`).textContent = pct + '%';
+}
+
+function addSubtask(board) {
+  const input = document.getElementById(`st-input-${board}`);
+  const priorityEl = document.getElementById(`st-priority-${board}`);
+  const text = input.value.trim();
+  if (!text) return;
+
+  const newTask = { id: nextStId++, text, done: false, priority: priorityEl.value };
+  if (!subtasks[board]) subtasks[board] = [];
+  subtasks[board].push(newTask);
+  saveSubtasks();
+  renderSubtasks(board);
+  input.value = '';
+  input.focus();
+  showToast('✅ تمت إضافة المهمة');
+}
+
+function toggleSubtask(board, id, val) {
+  const t = (subtasks[board] || []).find(x => x.id === id);
+  if (t) { t.done = val; saveSubtasks(); renderSubtasks(board); }
+}
+
+function deleteSubtask(board, id) {
+  subtasks[board] = (subtasks[board] || []).filter(x => x.id !== id);
+  saveSubtasks();
+  renderSubtasks(board);
+  showToast('🗑 تم حذف المهمة');
+}
+
+function renderAll() {
+  calcStreaks();
+  renderTable();
+  renderChartBars();
+  updateStats();
+  renderProgressChart();
+  renderOverview();
+  renderSubtasks(1);
+  renderSubtasks(2);
+  renderStatus();
+}
+
+function showManualReset() {
+  // Show confirmation for manual reset
+  if (!confirm(`هل تريد إعادة تعيين بيانات الشهر الحالي وبدء من الصفر؟\n\nسيتم حذف جميع التحديدات الشهرية الحالية.`)) return;
+
+  const currentMonthKey = getMonthKey(today);
+  const lm = today.getMonth() + 1;
+  const ly = today.getFullYear();
+  const lastMonthDays = today.getDate(); // days so far
+
+  let totalDone = 0, totalPossible = 0, maxStreak = 0;
+  for (let day = 1; day <= lastMonthDays; day++) {
+    const d = new Date(ly, lm - 1, day);
+    const ds = formatDate(d);
+    habits.forEach(h => {
+      totalPossible++;
+      if (getCheck(h.id, ds)) totalDone++;
+    });
+  }
+  const pct = totalPossible > 0 ? Math.round((totalDone / totalPossible) * 100) : 0;
+
+  // Save archive snapshot
+  const archive = JSON.parse(localStorage.getItem('monthsArchive') || '[]');
+  const existing = archive.findIndex(a => a.month === currentMonthKey);
+  const entry = { month: currentMonthKey, label: `${MONTHS_AR[lm-1]} ${ly}`, totalDone, totalPossible, pct, maxStreak };
+  if (existing >= 0) archive[existing] = entry; else archive.push(entry);
+  localStorage.setItem('monthsArchive', JSON.stringify(archive));
+
+  checks = {};
+  localStorage.setItem('checks', JSON.stringify(checks));
+  habits.forEach(h => h.streak = 0);
+  save();
+  showToast('🔄 تم إعادة تعيين الشهر من الصفر');
+  renderAll();
+}
+
+// ============ INIT ============
+// Set month badge label
+document.getElementById('current-month-label').textContent = MONTHS_AR[today.getMonth()] + ' ' + today.getFullYear();
+
+// Welcome message
+setTimeout(() => {
+  addChatMsg('مرحباً! 👋 أنا مساعدك الذكي لتتبع العادات. كيف يمكنني مساعدتك اليوم؟', 'ai');
+}, 500);
+
+// Check for new month
+checkMonthlyReset();
+
+renderAll();
+</script>
+</body>
+</html>
